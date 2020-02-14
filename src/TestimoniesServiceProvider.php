@@ -3,6 +3,7 @@
 namespace Faithgen\Testimonies;
 
 use FaithGen\SDK\Traits\ConfigTrait;
+use Faithgen\Testimonies\Services\TestimoniesService;
 use Illuminate\Support\ServiceProvider;
 
 class TestimoniesServiceProvider extends ServiceProvider
@@ -66,6 +67,9 @@ class TestimoniesServiceProvider extends ServiceProvider
         $this->app->singleton('testimonies', function () {
             return new Testimonies;
         });
+
+        //register tesmony services
+        $this->app->singleton(TestimoniesService::class, TestimoniesService::class);
     }
 
     public function routeConfiguration(): array
