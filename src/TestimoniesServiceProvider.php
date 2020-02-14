@@ -2,10 +2,12 @@
 
 namespace Faithgen\Testimonies;
 
+use FaithGen\SDK\Traits\ConfigTrait;
 use Illuminate\Support\ServiceProvider;
 
 class TestimoniesServiceProvider extends ServiceProvider
 {
+    use ConfigTrait;
     /**
      * Bootstrap the application services.
      */
@@ -17,11 +19,15 @@ class TestimoniesServiceProvider extends ServiceProvider
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'testimonies');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'testimonies');
         // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
+
+        $this->registerRoutes(__DIR__ . '/routes/testimonies.php', __DIR__ . '/routes/source.php');
+
+        $this->setUpSourceFiles(function () {
+        });
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/config.php' => config_path('testimonies.php'),
+                __DIR__ . '/../config/config.php' => config_path('testimonies.php'),
             ], 'config');
 
             // Publishing the views.
@@ -50,11 +56,20 @@ class TestimoniesServiceProvider extends ServiceProvider
     public function register()
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'testimonies');
+        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'faithgen-testimonies');
 
         // Register the main class to use with the facade
         $this->app->singleton('testimonies', function () {
             return new Testimonies;
         });
+    }
+
+    public function routeConfiguration(): array
+    {
+        return [
+            'prefix' => config('faithgen-testimonies.prefix'),
+            'namespace' => "Faithgen\Testimonies\Http\Controllers",
+            'middleware' => config('faithgen-testimonies.middlewares'),
+        ];
     }
 }
