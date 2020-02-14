@@ -9,11 +9,25 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
-class TestimonyController extends Controller
+/**
+ * Controlls testimonies
+ */
+final class TestimonyController extends Controller
 {
     use ValidatesRequests, AuthorizesRequests, DispatchesJobs;
-    protected $testimoniesService;
 
+    /**
+     * Injects the testimonies service class
+     *
+     * @var TestimoniesService
+     */
+    private TestimoniesService $testimoniesService;
+
+    /**
+     * Injects the service class
+     * 
+     * @param TestimoniesService $testimoniesService 
+     */
     public function __construct(TestimoniesService $testimoniesService)
     {
         $this->testimoniesService = $testimoniesService;

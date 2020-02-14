@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @see \Faithgen\Testimonies\Skeleton\SkeletonClass
  */
-class TestimoniesFacade extends Facade
+final class TestimoniesFacade extends Facade
 {
     /**
      * Get the registered name of the component.

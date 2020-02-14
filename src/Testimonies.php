@@ -2,7 +2,7 @@
 
 namespace Faithgen\Testimonies;
 
-class Testimonies
+final class Testimonies
 {
     // Build your next great package.
 }

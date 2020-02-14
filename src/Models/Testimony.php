@@ -9,7 +9,7 @@ use FaithGen\SDK\Traits\Relationships\Morphs\CommentableTrait;
 use FaithGen\SDK\Traits\Relationships\Morphs\ImageableTrait;
 use FaithGen\SDK\Traits\TitleTrait;
 
-class Testimony extends UuidModel
+final class Testimony extends UuidModel
 {
     use BelongsToMinistryTrait, BelongsToUserTrait, TitleTrait, CommentableTrait, ImageableTrait;
 }
