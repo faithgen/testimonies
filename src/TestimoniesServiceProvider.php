@@ -28,6 +28,10 @@ class TestimoniesServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__ . '/../database/migrations/' => database_path('migrations')
             ], 'faithgen-testimonies-migrations');
+
+            $this->publishes([
+                __DIR__ . '/../storage/' => storage_path('app/public/testimonies')
+            ], 'faithgen-testimonies-storage');
         });
 
         if ($this->app->runningInConsole()) {
