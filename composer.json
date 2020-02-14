@@ -17,7 +17,13 @@
     ],
     "require": {
         "php": "^7.1",
-        "illuminate/support": "^6.0"
+        "crazybooot/base64-validation": "^1.0",
+        "illuminate/support": "^6.0",
+        "illuminate/database": "^6.0",
+        "illuminate/queue": "^6.0",
+        "illuminate/contracts": "^6.0",
+        "intervention/image": "^2.4@dev",
+        "faithgen/sdk": "^1.1"
     },
     "require-dev": {
         "orchestra/testbench": "^4.0",
@@ -36,7 +42,6 @@
     "scripts": {
         "test": "vendor/bin/phpunit",
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-
     },
     "config": {
         "sort-packages": true
