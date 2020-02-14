@@ -18,17 +18,21 @@ class TestimoniesServiceProvider extends ServiceProvider
          */
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'testimonies');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'testimonies');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
         $this->registerRoutes(__DIR__ . '/routes/testimonies.php', __DIR__ . '/routes/source.php');
 
         $this->setUpSourceFiles(function () {
+            $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+
+            $this->publishes([
+                __DIR__ . '/../database/migrations/' => database_path('migrations')
+            ], 'faithgen-testimonies-migrations');
         });
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/config.php' => config_path('testimonies.php'),
-            ], 'config');
+                __DIR__ . '/../config/config.php' => config_path('faithgen-testimonies.php'),
+            ], 'faithgen-testimonies-config');
 
             // Publishing the views.
             /*$this->publishes([
