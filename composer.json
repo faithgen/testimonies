@@ -50,7 +50,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Faithgen\\Testimonies\\TestimoniesServiceProvider"
+                "Faithgen\\Testimonies\\TestimoniesServiceProvider",
+                "Faithgen\\Testimonies\\Providers\\AuthServiceProvider"
             ],
             "aliases": {
                 "Testimonies": "Faithgen\\Testimonies\\TestimoniesFacade"

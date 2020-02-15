@@ -13,6 +13,7 @@ use InnoFlash\LaraStart\Http\Helper;
 use InnoFlash\LaraStart\Http\Requests\IndexRequest;
 use InnoFlash\LaraStart\Traits\APIResponses;
 use Faithgen\Testimonies\Http\Resources\Testimony as TestimonyResource;
+use Faithgen\Testimonies\Models\Testimony;
 
 /**
  * Controlls testimonies
@@ -78,5 +79,17 @@ final class TestimonyController extends Controller
             ->paginate(Helper::getLimit($request));
         TestimonyResource::wrap('testimonies');
         return TestimonyResource::collection($testimonies);
+    }
+
+    /**
+     * Retrieves the testimony details
+     * 
+     * Shows only to the owner ministry
+     *
+     * @param Testimony $testimony
+     * @return void
+     */
+    public function show(Testimony $testimony)
+    {
     }
 }
