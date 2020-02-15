@@ -9,13 +9,14 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use InnoFlash\LaraStart\Traits\APIResponses;
 
 /**
  * Controlls testimonies
  */
 final class TestimonyController extends Controller
 {
-    use ValidatesRequests, AuthorizesRequests, DispatchesJobs;
+    use ValidatesRequests, AuthorizesRequests, DispatchesJobs, APIResponses;
 
     /**
      * Injects the testimonies service class
@@ -36,5 +37,16 @@ final class TestimonyController extends Controller
 
     public function create(CreateRequest $request)
     {
+        $testifier = auth('web')->user();
+        $params = array_merge($request->validated(), [
+            'ministry_id' => auth()->user()->id
+        ]);
+        unset($params['images']);
+        try {
+            $testifier->testimonies()->create($params);
+            return $this->successResponse('Testimony was posted successfully!');
+        } catch (\Exception $exc) {
+            return abort(500, $exc->getMessage());
+        }
     }
 }

@@ -12,7 +12,7 @@ trait HasManyTestimonies
      *
      * @return Relation
      */
-    public function tesimonies(): Relation
+    public function testimonies(): Relation
     {
         return $this->hasMany(Testimony::class);
     }
