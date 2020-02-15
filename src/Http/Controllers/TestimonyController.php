@@ -3,6 +3,7 @@
 namespace Faithgen\Testimonies\Http\Controllers;
 
 use Faithgen\Testimonies\Http\Requests\CreateRequest;
+use Faithgen\Testimonies\Http\Requests\ToggleApprovalRequest;
 use Faithgen\Testimonies\Services\TestimoniesService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -112,5 +113,16 @@ final class TestimonyController extends Controller
         } catch (\Exception $e) {
             return abort(500, $e->getMessage());
         }
+    }
+
+    /**
+     * Approves and disapprove a testimony
+     *
+     * @param ToggleApprovalRequest $request
+     * @return void
+     */
+    public function toggleApproval(ToggleApprovalRequest $request)
+    {
+        return $this->testimoniesService->update($request->validated(), 'Testimony approval status updated');
     }
 }
