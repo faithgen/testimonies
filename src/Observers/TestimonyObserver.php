@@ -17,10 +17,11 @@ final class TestimonyObserver
      */
     public function created(Testimony $testimony)
     {
-        UploadImages::withChain([
-            new ProcessImages($testimony),
-            new S3Upload()
-        ])->dispatch($testimony, request('images'));
+        if (auth()->user()->account->level !== 'Free')
+            UploadImages::withChain([
+                new ProcessImages($testimony),
+                new S3Upload()
+            ])->dispatch($testimony, request('images'));
     }
 
     /**
