@@ -50,7 +50,7 @@ final class TestimonyController extends Controller
         unset($params['images']);
         try {
             $testifier->testimonies()->create($params);
-            return $this->successResponse('Testimony was posted successfully!');
+            return $this->successResponse('Testimony was posted successfully, waiting for admin to approve!');
         } catch (\Exception $exc) {
             return abort(500, $exc->getMessage());
         }

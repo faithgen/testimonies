@@ -23,4 +23,9 @@ final class Testimony extends UuidModel
     {
         return '';
     }
+
+    public function scopeApproved($query)
+    {
+        return $query->whereApproved(true);
+    }
 }

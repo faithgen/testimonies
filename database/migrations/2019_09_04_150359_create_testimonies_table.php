@@ -20,6 +20,7 @@ class CreateTestimoniesTable extends Migration
             $table->string('title');
             $table->text('testimony');
             $table->string('resource')->nullable();
+            $table->boolean('approved')->default(false);
             $table->timestamps();
 
             $table->foreign('ministry_id')->references('id')->on('ministries')->onDelete('cascade');
