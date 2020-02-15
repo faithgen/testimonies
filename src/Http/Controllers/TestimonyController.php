@@ -96,4 +96,21 @@ final class TestimonyController extends Controller
         TestimonyDetails::withoutWrapping();
         return new TestimonyDetails($testimony);
     }
+
+    /**
+     * Deletes the testimony
+     *
+     * @param Testimony $testimony
+     * @return void
+     */
+    public function destroy(Testimony $testimony)
+    {
+        $this->authorize('delete', $testimony);
+        try {
+            $testimony->delete();
+            return $this->successResponse('Testimony deleted!');
+        } catch (\Exception $e) {
+            return abort(500, $e->getMessage());
+        }
+    }
 }

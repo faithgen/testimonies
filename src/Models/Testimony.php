@@ -19,9 +19,11 @@ final class Testimony extends UuidModel
         return 'testimonies';
     }
 
-    public function getFileName()
+    public function getFileName(): array
     {
-        return '';
+        return $this->images()
+            ->pluck('name')
+            ->toArray();
     }
 
     public function scopeApproved($query)

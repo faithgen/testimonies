@@ -59,30 +59,6 @@ class TestimonyPolicy
      */
     public function delete(Ministry $ministry, Testimony $testimony)
     {
-        //
-    }
-
-    /**
-     * Determine whether the ministry can restore the testimony.
-     *
-     * @param  \App\Models\Ministry  $ministry
-     * @param  \App\Testimony  $testimony
-     * @return mixed
-     */
-    public function restore(Ministry $ministry, Testimony $testimony)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the ministry can permanently delete the testimony.
-     *
-     * @param  \App\Models\Ministry  $ministry
-     * @param  \App\Testimony  $testimony
-     * @return mixed
-     */
-    public function forceDelete(Ministry $ministry, Testimony $testimony)
-    {
-        //
+        return $ministry->id === $testimony->ministry_id || auth('web')->user()->id === $testimony->user_id;
     }
 }
