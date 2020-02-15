@@ -24,7 +24,7 @@ class TestimonyPolicy
      */
     public function view(Ministry $ministry, Testimony $testimony)
     {
-        //
+        return $ministry->id === $testimony->ministry_id;
     }
 
     /**

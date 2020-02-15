@@ -13,6 +13,7 @@ use InnoFlash\LaraStart\Http\Helper;
 use InnoFlash\LaraStart\Http\Requests\IndexRequest;
 use InnoFlash\LaraStart\Traits\APIResponses;
 use Faithgen\Testimonies\Http\Resources\Testimony as TestimonyResource;
+use Faithgen\Testimonies\Http\Resources\TestimonyDetails;
 use Faithgen\Testimonies\Models\Testimony;
 
 /**
@@ -91,5 +92,8 @@ final class TestimonyController extends Controller
      */
     public function show(Testimony $testimony)
     {
+        $this->authorize('view', $testimony);
+        TestimonyDetails::withoutWrapping();
+        return new TestimonyDetails($testimony);
     }
 }
