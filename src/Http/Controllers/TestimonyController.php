@@ -2,6 +2,7 @@
 
 namespace Faithgen\Testimonies\Http\Controllers;
 
+use Faithgen\Testimonies\Http\Requests\CreateRequest;
 use Faithgen\Testimonies\Services\TestimoniesService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -31,5 +32,9 @@ final class TestimonyController extends Controller
     public function __construct(TestimoniesService $testimoniesService)
     {
         $this->testimoniesService = $testimoniesService;
+    }
+
+    public function create(CreateRequest $request)
+    {
     }
 }
