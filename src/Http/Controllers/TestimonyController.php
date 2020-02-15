@@ -35,8 +35,15 @@ final class TestimonyController extends Controller
         $this->testimoniesService = $testimoniesService;
     }
 
+    /**
+     * Creates a testimony for the given user
+     *
+     * @param CreateRequest $request
+     * @return void
+     */
     public function create(CreateRequest $request)
     {
+        return auth()->user()->account()->update(['level' => 'Premium']);
         $testifier = auth('web')->user();
         $params = array_merge($request->validated(), [
             'ministry_id' => auth()->user()->id

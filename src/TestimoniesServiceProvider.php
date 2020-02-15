@@ -3,6 +3,8 @@
 namespace Faithgen\Testimonies;
 
 use FaithGen\SDK\Traits\ConfigTrait;
+use Faithgen\Testimonies\Models\Testimony;
+use Faithgen\Testimonies\Observers\TestimonyObserver;
 use Faithgen\Testimonies\Services\TestimoniesService;
 use Illuminate\Support\ServiceProvider;
 
@@ -28,11 +30,12 @@ final class TestimoniesServiceProvider extends ServiceProvider
             ], 'faithgen-testimonies-storage');
         });
 
-        if ($this->app->runningInConsole()) {
+        if ($this->app->runningInConsole())
             $this->publishes([
                 __DIR__ . '/../config/config.php' => config_path('faithgen-testimonies.php'),
             ], 'faithgen-testimonies-config');
-        }
+
+        Testimony::observe(TestimonyObserver::class);
     }
 
     /**
