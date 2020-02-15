@@ -26,6 +26,8 @@ final class Testimony extends UuidModel
 
     public function scopeApproved($query)
     {
-        return $query->whereApproved(true);
+        if (!config('faithgen-sdk.source'))
+            return $query->whereApproved(true);
+        else return $query;
     }
 }

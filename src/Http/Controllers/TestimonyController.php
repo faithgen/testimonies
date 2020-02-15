@@ -9,7 +9,10 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use InnoFlash\LaraStart\Http\Helper;
+use InnoFlash\LaraStart\Http\Requests\IndexRequest;
 use InnoFlash\LaraStart\Traits\APIResponses;
+use Faithgen\Testimonies\Http\Resources\Testimony as TestimonyResource;
 
 /**
  * Controlls testimonies
@@ -54,5 +57,26 @@ final class TestimonyController extends Controller
         } catch (\Exception $exc) {
             return abort(500, $exc->getMessage());
         }
+    }
+
+    /**
+     * Fetches the testimonies
+     *
+     * @param IndexRequest $request
+     * @return void
+     */
+    public function index(IndexRequest $request)
+    {
+        $testimonies = $this->testimoniesService
+            ->getTestimony()
+            ->with(['user', 'images'])
+            ->where('title', 'LIKE', '%' . $request->filter_text . '%')
+            ->orWhere('created_at', 'LIKE', '%' . $request->filter_text . '%')
+            ->orWhereHas('user',  function ($user) use ($request) {
+                return $user->where('name', 'LIKE', '%' . $request->filter_text . '%');
+            })->latest()
+            ->paginate(Helper::getLimit($request));
+        TestimonyResource::wrap('testimonies');
+        return TestimonyResource::collection($testimonies);
     }
 }
