@@ -2,6 +2,9 @@
 
 namespace Faithgen\Testimonies\Observers;
 
+use Faithgen\Testimonies\Jobs\ProcessImages;
+use Faithgen\Testimonies\Jobs\S3Upload;
+use Faithgen\Testimonies\Jobs\UploadImages;
 use Faithgen\Testimonies\Models\Testimony;
 
 final class TestimonyObserver
@@ -14,7 +17,10 @@ final class TestimonyObserver
      */
     public function created(Testimony $testimony)
     {
-        //
+        UploadImages::withChain([
+            new ProcessImages($testimony),
+            new S3Upload()
+        ])->dispatch($testimony, request('images'));
     }
 
     /**
