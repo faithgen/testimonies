@@ -10,6 +10,11 @@ class TestimonyPolicy
 {
     use HandlesAuthorization;
 
+    private $adminRouteNames = [
+        'testimonies.toggle-approval',
+        'testimonies.delete-image',
+    ];
+
     public function viewAny(Ministry $ministry)
     {
         //
@@ -47,9 +52,10 @@ class TestimonyPolicy
      */
     public function update(Ministry $ministry, Testimony $testimony)
     {
-        if (request()->route()->getName() === 'testimonies.toggle-approval')
+        if (in_array(request()->route()->getName(), $this->adminRouteNames))
             return $ministry->id === $testimony->ministry_id;
-        return auth('web')->user()->id === $testimony->user_id;
+        $user = auth('web')->user();
+        return $user->id === $testimony->user_id && $user->active;
     }
 
     /**

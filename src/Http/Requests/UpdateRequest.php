@@ -34,11 +34,8 @@ class UpdateRequest extends FormRequest
      */
     public function authorize(TestimoniesService $testimoniesService)
     {
+        return $this->user()->can('update', $testimoniesService->getTestimony());
         $user = auth('web')->user();
-        if (($user && $user->active)
-            && ($testimoniesService->getTestimony() && $testimoniesService->getTestimony()->user_id === $user->id)
-        ) return true;
-        return false;
     }
 
     /**
