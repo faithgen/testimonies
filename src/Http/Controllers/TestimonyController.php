@@ -129,6 +129,13 @@ final class TestimonyController extends Controller
         return $this->testimoniesService->update($request->validated(), 'Testimony approval status updated');
     }
 
+    /**
+     * Fetches testimonies for a given user id who belongs to the authenticated ministry
+     *
+     * @param Request $request You may include a limit in the request
+     * @param User $user
+     * @return void
+     */
     public function userTestimonies(Request $request, User $user)
     {
         if (auth()->user()->ministryUsers()->where('user_id', $user->id)->first()) {
@@ -136,7 +143,7 @@ final class TestimonyController extends Controller
                 ->testimonies()
                 ->with(['user', 'images'])
                 ->where('user_id', $user->id)
-                ->approved()
+                ->approved($user)
                 ->latest()
                 ->paginate(Helper::getLimit($request));
             TestimonyResource::wrap('testimonies');

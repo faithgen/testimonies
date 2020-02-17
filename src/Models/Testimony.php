@@ -2,6 +2,7 @@
 
 namespace Faithgen\Testimonies\Models;
 
+use FaithGen\SDK\Models\User;
 use FaithGen\SDK\Models\UuidModel;
 use FaithGen\SDK\Traits\Relationships\Belongs\BelongsToMinistryTrait;
 use FaithGen\SDK\Traits\Relationships\Belongs\BelongsToUserTrait;
@@ -26,10 +27,15 @@ final class Testimony extends UuidModel
             ->toArray();
     }
 
-    public function scopeApproved($query)
+    public function scopeApproved($query, User $user = null)
     {
-        if (!config('faithgen-sdk.source'))
-            return $query->whereApproved(true);
-        return $query;
+        $authedUser = auth('web')->user();
+        if ($user === null || $authedUser === null) $isOwner = false;
+        if ($authedUser && $authedUser->id === $user->id) $isOwner = true;
+
+        if (config('faithgen-sdk.source') || $isOwner)
+            return $query;
+
+        return $query->whereApproved(true);
     }
 }

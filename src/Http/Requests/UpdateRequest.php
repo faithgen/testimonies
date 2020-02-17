@@ -6,6 +6,24 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateRequest extends FormRequest
 {
+
+    private $primaryRules = [
+        'title' => 'required|string',
+        'testimony' => 'required|string',
+    ];
+
+    /**
+     * Used for an ministry at PremiumPlus subscription
+     *
+     * @return array
+     */
+    private function getPremiumPlusRules(): array
+    {
+        return array_merge($this->primaryRules, [
+            'resource' => 'url'
+        ]);
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,6 +31,8 @@ class UpdateRequest extends FormRequest
      */
     public function authorize()
     {
+        $user = auth('web')->user();
+        if ($user && $user->active) return true;
         return false;
     }
 
@@ -23,8 +43,9 @@ class UpdateRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        $subscriptionLevel = auth()->user()->account->level;
+        if ($subscriptionLevel === 'PremiumPlus')
+            return $this->getPremiumRules();
+        return $this->primaryRules;
     }
 }
