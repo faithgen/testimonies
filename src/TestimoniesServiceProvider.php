@@ -2,6 +2,7 @@
 
 namespace Faithgen\Testimonies;
 
+use FaithGen\SDK\Services\ImageService;
 use FaithGen\SDK\Traits\ConfigTrait;
 use Faithgen\Testimonies\Models\Testimony;
 use Faithgen\Testimonies\Observers\TestimonyObserver;
@@ -53,6 +54,7 @@ final class TestimoniesServiceProvider extends ServiceProvider
 
         //register tesmony services
         $this->app->singleton(TestimoniesService::class, TestimoniesService::class);
+        $this->app->singleton(ImageService::class, ImageService::class);
     }
 
     public function routeConfiguration(): array
