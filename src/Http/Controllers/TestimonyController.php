@@ -17,6 +17,7 @@ use InnoFlash\LaraStart\Http\Requests\IndexRequest;
 use Faithgen\Testimonies\Http\Requests\CreateRequest;
 use Faithgen\Testimonies\Http\Requests\UpdateRequest;
 use Faithgen\Testimonies\Services\TestimoniesService;
+use Faithgen\Testimonies\Http\Requests\CommentRequest;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Faithgen\Testimonies\Http\Requests\AddImagesRequest;
 use Faithgen\Testimonies\Http\Resources\TestimonyDetails;
@@ -219,5 +220,16 @@ final class TestimonyController extends Controller
     {
         $this->authorize('view', $testimony);
         return CommentHelper::getComments($testimony, $request);
+    }
+
+    /**
+     * This sends a comment to the given testimony
+     *
+     * @param CommentRequest $request
+     * @return void
+     */
+    public function comment(CommentRequest $request)
+    {
+        return CommentHelper::createComment($this->testimoniesService->getTestimony(), $request);
     }
 }

@@ -10,6 +10,7 @@ Route::prefix('testimonies/')
         Route::get('{testimony}', [TestimonyController::class, 'show']);
         Route::get('user/{user}', [TestimonyController::class, 'userTestimonies']);
         Route::get('comments/{testimony}', [TestimonyController::class, 'comments']);
+        Route::post('comment', [TestimonyController::class, 'comment']);
         Route::post('delete-image', [TestimonyController::class, 'destroyImage'])->name('delete-image');
         Route::post('', [TestimonyController::class, 'create']);
         Route::post('update', [TestimonyController::class, 'update']);
