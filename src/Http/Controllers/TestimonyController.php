@@ -11,6 +11,7 @@ use InnoFlash\LaraStart\Traits\APIResponses;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use InnoFlash\LaraStart\Http\Requests\IndexRequest;
 use Faithgen\Testimonies\Http\Requests\CreateRequest;
+use Faithgen\Testimonies\Http\Requests\UpdateRequest;
 use Faithgen\Testimonies\Services\TestimoniesService;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Faithgen\Testimonies\Http\Resources\TestimonyDetails;
@@ -19,7 +20,7 @@ use Faithgen\Testimonies\Http\Requests\ToggleApprovalRequest;
 use Faithgen\Testimonies\Http\Resources\Testimony as TestimonyResource;
 
 /**
- * Controlls testimonies
+ * Controlls \testimonies
  */
 final class TestimonyController extends Controller
 {
@@ -150,5 +151,16 @@ final class TestimonyController extends Controller
             return TestimonyResource::collection($testimonies);
         }
         return abort(403, 'You are not allowed to view testimonies from this user');
+    }
+
+    /**
+     * Updates the user,s testimony here
+     *
+     * @param UpdateRequest $request
+     * @return void
+     */
+    public function update(UpdateRequest $request)
+    {
+        return $this->testimoniesService->update($request->validated(), 'Testimony updated successfully!');
     }
 }

@@ -2,6 +2,8 @@
 
 namespace Faithgen\Testimonies\Http\Requests;
 
+use Faithgen\Testimonies\Services\TestimoniesService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateRequest extends FormRequest
@@ -10,6 +12,7 @@ class UpdateRequest extends FormRequest
     private $primaryRules = [
         'title' => 'required|string',
         'testimony' => 'required|string',
+        'testimony_id' => 'required|string'
     ];
 
     /**
@@ -29,10 +32,12 @@ class UpdateRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(TestimoniesService $testimoniesService)
     {
         $user = auth('web')->user();
-        if ($user && $user->active) return true;
+        if (($user && $user->active)
+            && ($testimoniesService->getTestimony() && $testimoniesService->getTestimony()->user_id === $user->id)
+        ) return true;
         return false;
     }
 
@@ -47,5 +52,10 @@ class UpdateRequest extends FormRequest
         if ($subscriptionLevel === 'PremiumPlus')
             return $this->getPremiumRules();
         return $this->primaryRules;
+    }
+
+    function failedAuthorization()
+    {
+        throw new AuthorizationException('You are not allowed to update this testimony');
     }
 }
