@@ -3,6 +3,7 @@
 namespace Faithgen\Testimonies\Http\Requests;
 
 
+use FaithGen\SDK\Helpers\Helper;
 use Illuminate\Foundation\Http\FormRequest;
 use Faithgen\Testimonies\Services\TestimoniesService;
 
@@ -15,15 +16,8 @@ class DeleteImageRequest extends FormRequest
      */
     public function authorize(TestimoniesService $testimoniesService)
     {
-        $user = auth('web')->user();
-        if (($user && $user->active)
-            && ($testimoniesService->getTestimony() && $testimoniesService->getTestimony()->user_id === $user->id)
-        ) return true;
-
-
-        return false;
+        return $this->user()->can('update', $testimoniesService->getTestimony());
     }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -32,7 +26,8 @@ class DeleteImageRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'testimony_id' => Helper::$idValidation,
+            'image_id' => Helper::$idValidation,
         ];
     }
 }

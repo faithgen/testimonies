@@ -11,6 +11,7 @@ use InnoFlash\LaraStart\Traits\APIResponses;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use InnoFlash\LaraStart\Http\Requests\IndexRequest;
 use Faithgen\Testimonies\Http\Requests\CreateRequest;
+use Faithgen\Testimonies\Http\Requests\DeleteImageRequest;
 use Faithgen\Testimonies\Http\Requests\UpdateRequest;
 use Faithgen\Testimonies\Services\TestimoniesService;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -162,5 +163,25 @@ final class TestimonyController extends Controller
     public function update(UpdateRequest $request)
     {
         return $this->testimoniesService->update($request->validated(), 'Testimony updated successfully!');
+    }
+
+    /**
+     * Deletes an image from a testimony
+     *
+     * @param DeleteImageRequest $request
+     * @return void
+     */
+    public function destroyImage(DeleteImageRequest $request)
+    {
+        $image = $this->testimoniesService->getTestimony()->images()->findOrFail($request->image_id);
+        try {
+            unlink(storage_path('app/public/testimonies/100-100/' . $image->name));
+            unlink(storage_path('app/public/testimonies/50-50/' . $image->name));
+            unlink(storage_path('app/public/testimonies/original/' . $image->name));
+            $image->delete();
+            return $this->successResponse('Image deleted!');
+        } catch (\Exception $e) {
+            abort(500, $e->getMessage());
+        }
     }
 }

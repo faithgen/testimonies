@@ -35,7 +35,6 @@ class UpdateRequest extends FormRequest
     public function authorize(TestimoniesService $testimoniesService)
     {
         return $this->user()->can('update', $testimoniesService->getTestimony());
-        $user = auth('web')->user();
     }
 
     /**
