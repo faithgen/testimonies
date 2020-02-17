@@ -30,6 +30,6 @@ final class Testimony extends UuidModel
     {
         if (!config('faithgen-sdk.source'))
             return $query->whereApproved(true);
-        else return $query;
+        return $query;
     }
 }

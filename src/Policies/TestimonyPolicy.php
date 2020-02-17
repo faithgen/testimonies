@@ -49,7 +49,7 @@ class TestimonyPolicy
     {
         if (request()->route()->getName() === 'testimonies.toggle-approval')
             return $ministry->id === $testimony->ministry_id;
-        else return auth('web')->user()->id === $testimony->user_id;
+        return auth('web')->user()->id === $testimony->user_id;
     }
 
     /**

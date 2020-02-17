@@ -2,20 +2,21 @@
 
 namespace Faithgen\Testimonies\Http\Controllers;
 
-use Faithgen\Testimonies\Http\Requests\CreateRequest;
-use Faithgen\Testimonies\Http\Requests\ToggleApprovalRequest;
-use Faithgen\Testimonies\Services\TestimoniesService;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
+use FaithGen\SDK\Models\User;
 use Illuminate\Routing\Controller;
 use InnoFlash\LaraStart\Http\Helper;
-use InnoFlash\LaraStart\Http\Requests\IndexRequest;
-use InnoFlash\LaraStart\Traits\APIResponses;
-use Faithgen\Testimonies\Http\Resources\Testimony as TestimonyResource;
-use Faithgen\Testimonies\Http\Resources\TestimonyDetails;
 use Faithgen\Testimonies\Models\Testimony;
+use InnoFlash\LaraStart\Traits\APIResponses;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use InnoFlash\LaraStart\Http\Requests\IndexRequest;
+use Faithgen\Testimonies\Http\Requests\CreateRequest;
+use Faithgen\Testimonies\Services\TestimoniesService;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Faithgen\Testimonies\Http\Resources\TestimonyDetails;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Faithgen\Testimonies\Http\Requests\ToggleApprovalRequest;
+use Faithgen\Testimonies\Http\Resources\Testimony as TestimonyResource;
 
 /**
  * Controlls testimonies
@@ -70,14 +71,16 @@ final class TestimonyController extends Controller
      */
     public function index(IndexRequest $request)
     {
-        $testimonies = $this->testimoniesService
-            ->getTestimony()
+        $testimonies = auth()->user()
+            ->testimonies()
             ->with(['user', 'images'])
             ->where('title', 'LIKE', '%' . $request->filter_text . '%')
             ->orWhere('created_at', 'LIKE', '%' . $request->filter_text . '%')
             ->orWhereHas('user',  function ($user) use ($request) {
                 return $user->where('name', 'LIKE', '%' . $request->filter_text . '%');
-            })->latest()
+            })
+            ->approved()
+            ->latest()
             ->paginate(Helper::getLimit($request));
         TestimonyResource::wrap('testimonies');
         return TestimonyResource::collection($testimonies);
@@ -124,5 +127,13 @@ final class TestimonyController extends Controller
     public function toggleApproval(ToggleApprovalRequest $request)
     {
         return $this->testimoniesService->update($request->validated(), 'Testimony approval status updated');
+    }
+
+    public function userTestimonies(User $user)
+    {
+        if ($user = auth()->user()->ministryUsers()->where('user_id', $user->id)->first()) {
+            // $testimonies = 
+        }
+        return abort(403, 'You are not allowed to view testimonies from this user');
     }
 }
