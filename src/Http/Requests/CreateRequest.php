@@ -2,6 +2,7 @@
 
 namespace Faithgen\Testimonies\Http\Requests;
 
+use Faithgen\Testimonies\Testimonies;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -20,7 +21,7 @@ class CreateRequest extends FormRequest
     private function getPremiumRules(): array
     {
         return array_merge($this->primaryRules, [
-            'images' => 'array|max:5',
+            'images' => 'array|max:' . Testimonies::$premiumImageCount,
             'images.*' => 'base64image'
         ]);
     }
@@ -33,7 +34,7 @@ class CreateRequest extends FormRequest
     private function getPremiumPlusRules(): array
     {
         return array_merge($this->getPremiumRules(), [
-            'images' => 'array|max:10',
+            'images' => 'array|max:' . Testimonies::$premiumPlusImageCount,
             'resource' => 'url'
         ]);
     }

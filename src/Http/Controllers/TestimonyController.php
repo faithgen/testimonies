@@ -4,6 +4,7 @@ namespace Faithgen\Testimonies\Http\Controllers;
 
 use Illuminate\Http\Request;
 use FaithGen\SDK\Models\User;
+use Faithgen\Testimonies\Http\Requests\AddImagesRequest;
 use Illuminate\Routing\Controller;
 use InnoFlash\LaraStart\Http\Helper;
 use Faithgen\Testimonies\Models\Testimony;
@@ -19,6 +20,9 @@ use Faithgen\Testimonies\Http\Resources\TestimonyDetails;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Faithgen\Testimonies\Http\Requests\ToggleApprovalRequest;
 use Faithgen\Testimonies\Http\Resources\Testimony as TestimonyResource;
+use Faithgen\Testimonies\Jobs\ProcessImages;
+use Faithgen\Testimonies\Jobs\S3Upload;
+use Faithgen\Testimonies\Jobs\UploadImages;
 
 /**
  * Controlls \testimonies
@@ -183,5 +187,23 @@ final class TestimonyController extends Controller
         } catch (\Exception $e) {
             abort(500, $e->getMessage());
         }
+    }
+
+    /**
+     * Uploads images attaching them to a given testimony
+     *
+     * @param AddImagesRequest $request
+     * @return void
+     */
+    public function addImages(AddImagesRequest $request)
+    {
+        UploadImages::withChain([
+            new ProcessImages($this->testimoniesService->getTestimony()),
+            new S3Upload($this->testimoniesService->getTestimony())
+        ])->dispatch(
+            $this->testimoniesService->getTestimony(),
+            $request->images
+        );
+        return $this->successResponse('Images uploaded, processing them now');
     }
 }
