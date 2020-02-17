@@ -129,10 +129,18 @@ final class TestimonyController extends Controller
         return $this->testimoniesService->update($request->validated(), 'Testimony approval status updated');
     }
 
-    public function userTestimonies(User $user)
+    public function userTestimonies(Request $request, User $user)
     {
-        if ($user = auth()->user()->ministryUsers()->where('user_id', $user->id)->first()) {
-            // $testimonies = 
+        if (auth()->user()->ministryUsers()->where('user_id', $user->id)->first()) {
+            $testimonies =  auth()->user()
+                ->testimonies()
+                ->with(['user', 'images'])
+                ->where('user_id', $user->id)
+                ->approved()
+                ->latest()
+                ->paginate(Helper::getLimit($request));
+            TestimonyResource::wrap('testimonies');
+            return TestimonyResource::collection($testimonies);
         }
         return abort(403, 'You are not allowed to view testimonies from this user');
     }
