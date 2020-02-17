@@ -55,7 +55,9 @@ class TestimonyPolicy
         if (in_array(request()->route()->getName(), $this->adminRouteNames))
             return $ministry->id === $testimony->ministry_id;
         $user = auth('web')->user();
-        return $user->id === $testimony->user_id && $user->active;
+        return $user->id === $testimony->user_id
+            && $user->active
+            && $ministry->id === $testimony->ministry_id;
     }
 
     /**
