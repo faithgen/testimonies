@@ -4,25 +4,26 @@ namespace Faithgen\Testimonies\Http\Controllers;
 
 use Illuminate\Http\Request;
 use FaithGen\SDK\Models\User;
-use Faithgen\Testimonies\Http\Requests\AddImagesRequest;
 use Illuminate\Routing\Controller;
 use InnoFlash\LaraStart\Http\Helper;
+use FaithGen\SDK\Helpers\CommentHelper;
+use Faithgen\Testimonies\Jobs\S3Upload;
 use Faithgen\Testimonies\Models\Testimony;
+use Faithgen\Testimonies\Jobs\UploadImages;
+use Faithgen\Testimonies\Jobs\ProcessImages;
 use InnoFlash\LaraStart\Traits\APIResponses;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use InnoFlash\LaraStart\Http\Requests\IndexRequest;
 use Faithgen\Testimonies\Http\Requests\CreateRequest;
-use Faithgen\Testimonies\Http\Requests\DeleteImageRequest;
 use Faithgen\Testimonies\Http\Requests\UpdateRequest;
 use Faithgen\Testimonies\Services\TestimoniesService;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Faithgen\Testimonies\Http\Requests\AddImagesRequest;
 use Faithgen\Testimonies\Http\Resources\TestimonyDetails;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Faithgen\Testimonies\Http\Requests\DeleteImageRequest;
 use Faithgen\Testimonies\Http\Requests\ToggleApprovalRequest;
 use Faithgen\Testimonies\Http\Resources\Testimony as TestimonyResource;
-use Faithgen\Testimonies\Jobs\ProcessImages;
-use Faithgen\Testimonies\Jobs\S3Upload;
-use Faithgen\Testimonies\Jobs\UploadImages;
 
 /**
  * Controlls \testimonies
@@ -205,5 +206,18 @@ final class TestimonyController extends Controller
             $request->images
         );
         return $this->successResponse('Images uploaded, processing them now');
+    }
+
+    /**
+     * Fetches comments for the given testimony
+     *
+     * @param Request $request
+     * @param Testimony $testimony
+     * @return void
+     */
+    public function comments(Request $request, Testimony $testimony)
+    {
+        $this->authorize('view', $testimony);
+        return CommentHelper::getComments($testimony, $request);
     }
 }
