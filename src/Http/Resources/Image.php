@@ -19,6 +19,7 @@ class Image extends JsonResource
         return [
             'id' => $this->id,
             'caption' => $this->caption,
+	    'comments_count' => $this->comments()->count(),
             'date' => Helper::getDates($this->created_at),
             'avatar' => [
                 '_50' => SDK::getAsset('storage/testimonies/50-50/' . $this->name),

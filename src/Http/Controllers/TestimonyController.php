@@ -81,12 +81,14 @@ final class TestimonyController extends Controller
     {
         $testimonies = auth()->user()
             ->testimonies()
+ 	    ->where(function($testimony) use ($request){
+       	    	return $testimony->where('title', 'LIKE', '%' . $request->filter_text . '%')
+			    ->orWhere('created_at', 'LIKE', '%' . $request->filter_text . '%')
+			    ->orWhereHas('user',  function ($user) use ($request) {
+				return $user->where('name', 'LIKE', '%' . $request->filter_text . '%');
+			    });
+	    })
             ->with(['user', 'images'])
-            ->where('title', 'LIKE', '%' . $request->filter_text . '%')
-            ->orWhere('created_at', 'LIKE', '%' . $request->filter_text . '%')
-            ->orWhereHas('user',  function ($user) use ($request) {
-                return $user->where('name', 'LIKE', '%' . $request->filter_text . '%');
-            })
             ->approved()
             ->latest()
             ->paginate(Helper::getLimit($request));
@@ -149,8 +151,10 @@ final class TestimonyController extends Controller
         if (auth()->user()->ministryUsers()->where('user_id', $user->id)->first()) {
             $testimonies =  auth()->user()
                 ->testimonies()
+	        ->where(function($testimony) use ($request){
+			return $testimony->where('user_id', $user->id);
+		})
                 ->with(['user', 'images'])
-                ->where('user_id', $user->id)
                 ->approved($user)
                 ->latest()
                 ->paginate(Helper::getLimit($request));

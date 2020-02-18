@@ -18,6 +18,7 @@ class TestimonyDetails extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
+	    'comments_count' => $this->comments()->count(),
             'resource' => $this->resource->resource,
             'testimony' => $this->testimony,
             'approved' => (bool) $this->approved,
