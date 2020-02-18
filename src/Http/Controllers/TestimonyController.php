@@ -151,7 +151,7 @@ final class TestimonyController extends Controller
         if (auth()->user()->ministryUsers()->where('user_id', $user->id)->first()) {
             $testimonies =  auth()->user()
                 ->testimonies()
-	        ->where(function($testimony) use ($request){
+	        ->where(function($testimony) use ($request, $user){
 			return $testimony->where('user_id', $user->id);
 		})
                 ->with(['user', 'images'])
