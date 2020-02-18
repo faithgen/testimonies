@@ -79,15 +79,16 @@ final class TestimonyController extends Controller
      */
     public function index(IndexRequest $request)
     {
-        $testimonies = auth()->user()
+        $testimonies = auth()
+            ->user()
             ->testimonies()
- 	    ->where(function($testimony) use ($request){
-       	    	return $testimony->where('title', 'LIKE', '%' . $request->filter_text . '%')
-			    ->orWhere('created_at', 'LIKE', '%' . $request->filter_text . '%')
-			    ->orWhereHas('user',  function ($user) use ($request) {
-				return $user->where('name', 'LIKE', '%' . $request->filter_text . '%');
-			    });
-	    })
+            ->where(function ($testimony) use ($request) {
+                return $testimony->where('title', 'LIKE', '%' . $request->filter_text . '%')
+                    ->orWhere('created_at', 'LIKE', '%' . $request->filter_text . '%')
+                    ->orWhereHas('user',  function ($user) use ($request) {
+                        return $user->where('name', 'LIKE', '%' . $request->filter_text . '%');
+                    });
+            })
             ->with(['user', 'images'])
             ->approved()
             ->latest()
@@ -149,11 +150,12 @@ final class TestimonyController extends Controller
     public function userTestimonies(Request $request, User $user)
     {
         if (auth()->user()->ministryUsers()->where('user_id', $user->id)->first()) {
-            $testimonies =  auth()->user()
+            $testimonies =  auth()
+                ->user()
                 ->testimonies()
-	        ->where(function($testimony) use ($request, $user){
-			return $testimony->where('user_id', $user->id);
-		})
+                ->where(function ($testimony) use ($request, $user) {
+                    return $testimony->where('user_id', $user->id);
+                })
                 ->with(['user', 'images'])
                 ->approved($user)
                 ->latest()
