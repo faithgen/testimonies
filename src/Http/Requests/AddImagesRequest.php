@@ -52,4 +52,17 @@ class AddImagesRequest extends FormRequest
             return Testimonies::$premiumImageCount - $currentImagesCount;
         return Testimonies::$premiumPlusImageCount - $currentImagesCount;
     }
+
+        /**
+     * Converts image string array to usable string in the validation
+     *
+     * @return void
+     */
+    public function prepareForValidation()
+    {
+        if (is_string($this->images))
+            $this->merge([
+                'images' => json_decode($this->images, true)
+            ]);
+    }
 }

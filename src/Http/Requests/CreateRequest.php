@@ -70,4 +70,17 @@ class CreateRequest extends FormRequest
     {
         throw new AuthorizationException('You are not allowed to be posting testimonies here!');
     }
+
+    /**
+     * Converts image string array to usable string in the validation
+     *
+     * @return void
+     */
+    public function prepareForValidation()
+    {
+        if (is_string($this->images))
+            $this->merge([
+                'images' => json_decode($this->images, true)
+            ]);
+    }
 }

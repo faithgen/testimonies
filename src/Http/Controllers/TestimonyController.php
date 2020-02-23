@@ -25,6 +25,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Faithgen\Testimonies\Http\Requests\DeleteImageRequest;
 use Faithgen\Testimonies\Http\Requests\ToggleApprovalRequest;
 use Faithgen\Testimonies\Http\Resources\Testimony as TestimonyResource;
+use Intervention\Image\ImageManager;
 
 /**
  * Controlls \testimonies
@@ -190,10 +191,12 @@ final class TestimonyController extends Controller
             unlink(storage_path('app/public/testimonies/100-100/' . $image->name));
             unlink(storage_path('app/public/testimonies/50-50/' . $image->name));
             unlink(storage_path('app/public/testimonies/original/' . $image->name));
-            $image->delete();
+
             return $this->successResponse('Image deleted!');
         } catch (\Exception $e) {
             abort(500, $e->getMessage());
+        } finally {
+            $image->delete();
         }
     }
 
