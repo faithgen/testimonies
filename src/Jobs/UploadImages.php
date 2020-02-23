@@ -47,11 +47,15 @@ final class UploadImages implements ShouldQueue
         foreach ($this->images as $imageData) {
             $fileName = str_shuffle($this->testimony->id . time() . time()) . '.png';
             $ogSave = storage_path('app/public/testimonies/original/') . $fileName;
-            $imageManager->make($imageData)->save($ogSave);
-            $this->testimony->images()->create([
-                'imageable_id' => $this->testimony->id,
-                'name' => $fileName
-            ]);
+            try {
+                $imageManager->make($imageData)->save($ogSave);
+                $this->testimony->images()->create([
+                    'imageable_id' => $this->testimony->id,
+                    'name' => $fileName
+                ]);
+            } catch (\Exception $e) {
+            }
+
         }
     }
 }

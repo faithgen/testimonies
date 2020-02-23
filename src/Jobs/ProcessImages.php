@@ -41,19 +41,22 @@ final class ProcessImages implements ShouldQueue
     public function handle(ImageManager $imageManager)
     {
         foreach ($this->testimony->images as $image) {
-            $ogImage = storage_path('app/public/testimonies/original/') . $image->name;
-            $thumb50 = storage_path('app/public/testimonies/50-50/') . $image->name;
-            $thumb100 = storage_path('app/public/testimonies/100-100/') . $image->name;
+            try {
+                $ogImage = storage_path('app/public/testimonies/original/') . $image->name;
+                $thumb50 = storage_path('app/public/testimonies/50-50/') . $image->name;
+                $thumb100 = storage_path('app/public/testimonies/100-100/') . $image->name;
 
-            $imageManager->make($ogImage)->fit(100, 100, function ($constraint) {
-                $constraint->upsize();
-                $constraint->aspectRatio();
-            }, 'center')->save($thumb100);
+                $imageManager->make($ogImage)->fit(100, 100, function ($constraint) {
+                    $constraint->upsize();
+                    $constraint->aspectRatio();
+                }, 'center')->save($thumb100);
 
-            $imageManager->make($ogImage)->fit(50, 50, function ($constraint) {
-                $constraint->upsize();
-                $constraint->aspectRatio();
-            }, 'center')->save($thumb50);
+                $imageManager->make($ogImage)->fit(50, 50, function ($constraint) {
+                    $constraint->upsize();
+                    $constraint->aspectRatio();
+                }, 'center')->save($thumb50);
+            } catch (\Exception $e) {
+            }
         }
     }
 }
