@@ -10,6 +10,7 @@ use Faithgen\Testimonies\Services\TestimoniesService;
 class AddImagesRequest extends FormRequest
 {
     private TestimoniesService $testimoniesService;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -53,7 +54,7 @@ class AddImagesRequest extends FormRequest
         return Testimonies::$premiumPlusImageCount - $currentImagesCount;
     }
 
-        /**
+    /**
      * Converts image string array to usable string in the validation
      *
      * @return void
