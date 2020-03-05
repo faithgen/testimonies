@@ -10,7 +10,7 @@ class TestimonyDetails extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function toArray($request)
@@ -18,10 +18,10 @@ class TestimonyDetails extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-	    'comments_count' => $this->comments()->count(),
+            'comments_count' => $this->comments()->count(),
             'resource' => $this->resource->resource,
             'testimony' => $this->testimony,
-            'approved' => (bool) $this->approved,
+            'approved' => (bool)$this->approved,
             'user' => $this->user,
             'date' => Helper::getDates($this->created_at),
             'images' => Image::collection($this->images)
