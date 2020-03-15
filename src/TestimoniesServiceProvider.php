@@ -17,7 +17,7 @@ final class TestimoniesServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->registerRoutes(__DIR__ . '/routes/testimonies.php', __DIR__ . '/routes/source.php');
+        $this->registerRoutes(__DIR__ . '/../routes/testimonies.php', __DIR__ . '/../routes/source.php');
 
         $this->setUpSourceFiles(function () {
             $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');

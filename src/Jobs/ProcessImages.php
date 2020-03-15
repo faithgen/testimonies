@@ -36,6 +36,7 @@ final class ProcessImages implements ShouldQueue
     /**
      * Execute the job.
      *
+     * @param ImageManager $imageManager
      * @return void
      */
     public function handle(ImageManager $imageManager)
