@@ -3,7 +3,7 @@
 namespace Faithgen\Testimonies\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use InnoFlash\LaraStart\Http\Helper;
+use InnoFlash\LaraStart\Helper;
 
 class Testimony extends JsonResource
 {

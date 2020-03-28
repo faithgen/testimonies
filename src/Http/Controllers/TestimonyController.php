@@ -5,7 +5,7 @@ namespace Faithgen\Testimonies\Http\Controllers;
 use Illuminate\Http\Request;
 use FaithGen\SDK\Models\User;
 use Illuminate\Routing\Controller;
-use InnoFlash\LaraStart\Http\Helper;
+use InnoFlash\LaraStart\Helper;
 use FaithGen\SDK\Helpers\CommentHelper;
 use Faithgen\Testimonies\Jobs\S3Upload;
 use Faithgen\Testimonies\Models\Testimony;
@@ -43,8 +43,8 @@ final class TestimonyController extends Controller
 
     /**
      * Injects the service class
-     * 
-     * @param TestimoniesService $testimoniesService 
+     *
+     * @param TestimoniesService $testimoniesService
      */
     public function __construct(TestimoniesService $testimoniesService)
     {
@@ -100,11 +100,12 @@ final class TestimonyController extends Controller
 
     /**
      * Retrieves the testimony details
-     * 
+     *
      * Shows only to the owner ministry
      *
      * @param Testimony $testimony
-     * @return void
+     * @return TestimonyDetails
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function show(Testimony $testimony)
     {
@@ -118,6 +119,7 @@ final class TestimonyController extends Controller
      *
      * @param Testimony $testimony
      * @return void
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function destroy(Testimony $testimony)
     {

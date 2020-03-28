@@ -3,7 +3,7 @@
 namespace Faithgen\Testimonies\Http\Resources;
 
 use FaithGen\SDK\SDK;
-use InnoFlash\LaraStart\Http\Helper;
+use InnoFlash\LaraStart\Helper;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class Image extends JsonResource
