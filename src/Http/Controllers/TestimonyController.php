@@ -76,25 +76,25 @@ final class TestimonyController extends Controller
      * Fetches the testimonies
      *
      * @param IndexRequest $request
-     * @return void
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index(IndexRequest $request)
     {
         $testimonies = auth()
             ->user()
             ->testimonies()
-            ->where(function ($testimony) use ($request) {
-                return $testimony->where('title', 'LIKE', '%' . $request->filter_text . '%')
-                    ->orWhere('created_at', 'LIKE', '%' . $request->filter_text . '%')
-                    ->orWhereHas('user',  function ($user) use ($request) {
-                        return $user->where('name', 'LIKE', '%' . $request->filter_text . '%');
-                    });
-            })
-            ->with(['user', 'images'])
-            ->approved()
             ->latest()
+            ->where(function ($testimony) use ($request) {
+                return $testimony->search(['title', 'created_at',], $request->filter_text)
+                    ->orWhereHas('user', fn($user) => $user->search('name', $request->filter_text));
+            })
+            ->with(['user.image', 'images'])
+            ->exclude(['testimony', 'resource'])
+            ->approved()
             ->paginate(Helper::getLimit($request));
+
         TestimonyResource::wrap('testimonies');
+
         return TestimonyResource::collection($testimonies);
     }
 
@@ -153,7 +153,7 @@ final class TestimonyController extends Controller
     public function userTestimonies(Request $request, User $user)
     {
         if (auth()->user()->ministryUsers()->where('user_id', $user->id)->first()) {
-            $testimonies =  auth()
+            $testimonies = auth()
                 ->user()
                 ->testimonies()
                 ->where(function ($testimony) use ($request, $user) {
@@ -163,6 +163,7 @@ final class TestimonyController extends Controller
                 ->approved($user)
                 ->latest()
                 ->paginate(Helper::getLimit($request));
+
             TestimonyResource::wrap('testimonies');
             return TestimonyResource::collection($testimonies);
         }
@@ -225,11 +226,13 @@ final class TestimonyController extends Controller
      *
      * @param Request $request
      * @param Testimony $testimony
-     * @return void
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function comments(Request $request, Testimony $testimony)
     {
         $this->authorize('view', $testimony);
+
         return CommentHelper::getComments($testimony, $request);
     }
 
@@ -237,7 +240,7 @@ final class TestimonyController extends Controller
      * This sends a comment to the given testimony
      *
      * @param CommentRequest $request
-     * @return void
+     * @return \Illuminate\Http\JsonResponse
      */
     public function comment(CommentRequest $request)
     {

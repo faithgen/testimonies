@@ -12,6 +12,7 @@ use Illuminate\Support\ServiceProvider;
 final class TestimoniesServiceProvider extends ServiceProvider
 {
     use ConfigTrait;
+
     /**
      * Bootstrap the application services.
      */
@@ -27,15 +28,14 @@ final class TestimoniesServiceProvider extends ServiceProvider
             ], 'faithgen-testimonies-migrations');
         });
 
-        if(!config('faithgen-sdk.source'))
+        if (!config('faithgen-sdk.source'))
             $this->publishes([
                 __DIR__ . '/../storage/' => storage_path('app/public/testimonies')
             ], 'faithgen-testimonies-storage');
 
-        if ($this->app->runningInConsole())
-            $this->publishes([
-                __DIR__ . '/../config/config.php' => config_path('faithgen-testimonies.php'),
-            ], 'faithgen-testimonies-config');
+        $this->publishes([
+            __DIR__ . '/../config/config.php' => config_path('faithgen-testimonies.php'),
+        ], 'faithgen-testimonies-config');
 
         Testimony::observe(TestimonyObserver::class);
     }
