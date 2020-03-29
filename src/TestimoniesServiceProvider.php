@@ -25,11 +25,12 @@ final class TestimoniesServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__ . '/../database/migrations/' => database_path('migrations')
             ], 'faithgen-testimonies-migrations');
+        });
 
+        if(!config('faithgen-sdk.source'))
             $this->publishes([
                 __DIR__ . '/../storage/' => storage_path('app/public/testimonies')
             ], 'faithgen-testimonies-storage');
-        });
 
         if ($this->app->runningInConsole())
             $this->publishes([
@@ -52,16 +53,15 @@ final class TestimoniesServiceProvider extends ServiceProvider
             return new Testimonies();
         });
 
-        //register tesmony services
-        $this->app->singleton(TestimoniesService::class, TestimoniesService::class);
-        $this->app->singleton(ImageService::class, ImageService::class);
+        //register testimony services
+        $this->app->singleton(TestimoniesService::class);
+        $this->app->singleton(ImageService::class);
     }
 
     public function routeConfiguration(): array
     {
         return [
             'prefix' => config('faithgen-testimonies.prefix'),
-            'namespace' => "Faithgen\Testimonies\Http\Controllers",
             'middleware' => config('faithgen-testimonies.middlewares'),
         ];
     }
