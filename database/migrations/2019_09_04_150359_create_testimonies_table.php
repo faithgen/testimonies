@@ -13,7 +13,7 @@ class CreateTestimoniesTable extends Migration
      */
     public function up()
     {
-        Schema::create('testimonies', function (Blueprint $table) {
+        Schema::create('fg_testimonies', function (Blueprint $table) {
             $table->string('id', 150)->primary();
             $table->string('ministry_id', 150)->index();
             $table->string('user_id', 150)->index();
@@ -35,6 +35,6 @@ class CreateTestimoniesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('testimonies');
+        Schema::dropIfExists('fg_testimonies');
     }
 }

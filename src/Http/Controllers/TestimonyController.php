@@ -43,7 +43,7 @@ final class TestimonyController extends Controller
     /**
      * Injects the service class.
      *
-     * @param TestimoniesService $testimoniesService
+     * @param  TestimoniesService  $testimoniesService
      */
     public function __construct(TestimoniesService $testimoniesService)
     {
@@ -53,7 +53,8 @@ final class TestimonyController extends Controller
     /**
      * Creates a testimony for the given user.
      *
-     * @param CreateRequest $request
+     * @param  CreateRequest  $request
+     *
      * @return void
      */
     public function create(CreateRequest $request)
@@ -75,7 +76,8 @@ final class TestimonyController extends Controller
     /**
      * Fetches the testimonies.
      *
-     * @param IndexRequest $request
+     * @param  IndexRequest  $request
+     *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index(IndexRequest $request)
@@ -86,7 +88,7 @@ final class TestimonyController extends Controller
             ->latest()
             ->where(function ($testimony) use ($request) {
                 return $testimony->search(['title', 'created_at'], $request->filter_text)
-                    ->orWhereHas('user', fn ($user) => $user->search('name', $request->filter_text));
+                    ->orWhereHas('user', fn($user) => $user->search('name', $request->filter_text));
             })
             ->with(['user.image', 'images'])
             ->exclude(['testimony', 'resource'])
@@ -103,9 +105,10 @@ final class TestimonyController extends Controller
      *
      * Shows only to the owner ministry
      *
-     * @param Testimony $testimony
-     * @return TestimonyDetails
+     * @param  Testimony  $testimony
+     *
      * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return TestimonyDetails
      */
     public function show(Testimony $testimony)
     {
@@ -118,9 +121,10 @@ final class TestimonyController extends Controller
     /**
      * Deletes the testimony.
      *
-     * @param Testimony $testimony
-     * @return void
+     * @param  Testimony  $testimony
+     *
      * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return void
      */
     public function destroy(Testimony $testimony)
     {
@@ -137,7 +141,8 @@ final class TestimonyController extends Controller
     /**
      * Approves and disapprove a testimony.
      *
-     * @param ToggleApprovalRequest $request
+     * @param  ToggleApprovalRequest  $request
+     *
      * @return void
      */
     public function toggleApproval(ToggleApprovalRequest $request)
@@ -148,8 +153,9 @@ final class TestimonyController extends Controller
     /**
      * Fetches testimonies for a given user id who belongs to the authenticated ministry.
      *
-     * @param Request $request You may include a limit in the request
-     * @param User $user
+     * @param  Request  $request  You may include a limit in the request
+     * @param  User  $user
+     *
      * @return void
      */
     public function userTestimonies(Request $request, User $user)
@@ -177,7 +183,8 @@ final class TestimonyController extends Controller
     /**
      * Updates the user,s testimony here.
      *
-     * @param UpdateRequest $request
+     * @param  UpdateRequest  $request
+     *
      * @return void
      */
     public function update(UpdateRequest $request)
@@ -188,7 +195,8 @@ final class TestimonyController extends Controller
     /**
      * Deletes an image from a testimony.
      *
-     * @param DeleteImageRequest $request
+     * @param  DeleteImageRequest  $request
+     *
      * @return void
      */
     public function destroyImage(DeleteImageRequest $request)
@@ -210,7 +218,8 @@ final class TestimonyController extends Controller
     /**
      * Uploads images attaching them to a given testimony.
      *
-     * @param AddImagesRequest $request
+     * @param  AddImagesRequest  $request
+     *
      * @return void
      */
     public function addImages(AddImagesRequest $request)
@@ -229,10 +238,11 @@ final class TestimonyController extends Controller
     /**
      * Fetches comments for the given testimony.
      *
-     * @param Request $request
-     * @param Testimony $testimony
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @param  Request  $request
+     * @param  Testimony  $testimony
+     *
      * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function comments(Request $request, Testimony $testimony)
     {
@@ -244,7 +254,8 @@ final class TestimonyController extends Controller
     /**
      * This sends a comment to the given testimony.
      *
-     * @param CommentRequest $request
+     * @param  CommentRequest  $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function comment(CommentRequest $request)

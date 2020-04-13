@@ -20,6 +20,8 @@ final class Testimony extends UuidModel
     use ImageableTrait;
     use StorageTrait;
 
+    protected $table = 'fg_testimonies';
+
     public function filesDir()
     {
         return 'testimonies';
