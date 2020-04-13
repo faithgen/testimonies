@@ -2,10 +2,9 @@
 
 namespace Faithgen\Testimonies\Http\Requests;
 
-
 use FaithGen\SDK\Helpers\Helper;
-use Illuminate\Foundation\Http\FormRequest;
 use Faithgen\Testimonies\Services\TestimoniesService;
+use Illuminate\Foundation\Http\FormRequest;
 
 class DeleteImageRequest extends FormRequest
 {
@@ -18,6 +17,7 @@ class DeleteImageRequest extends FormRequest
     {
         return $this->user()->can('update', $testimoniesService->getTestimony());
     }
+
     /**
      * Get the validation rules that apply to the request.
      *

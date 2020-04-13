@@ -8,22 +8,21 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateRequest extends FormRequest
 {
-
     private $primaryRules = [
         'title' => 'required|string',
         'testimony' => 'required|string',
-        'testimony_id' => 'required|string'
+        'testimony_id' => 'required|string',
     ];
 
     /**
-     * Used for an ministry at PremiumPlus subscription
+     * Used for an ministry at PremiumPlus subscription.
      *
      * @return array
      */
     private function getPremiumPlusRules(): array
     {
         return array_merge($this->primaryRules, [
-            'resource' => 'url'
+            'resource' => 'url',
         ]);
     }
 
@@ -45,12 +44,14 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         $subscriptionLevel = auth()->user()->account->level;
-        if ($subscriptionLevel === 'PremiumPlus')
+        if ($subscriptionLevel === 'PremiumPlus') {
             return $this->getPremiumRules();
+        }
+
         return $this->primaryRules;
     }
 
-    function failedAuthorization()
+    public function failedAuthorization()
     {
         throw new AuthorizationException('You are not allowed to update this testimony');
     }

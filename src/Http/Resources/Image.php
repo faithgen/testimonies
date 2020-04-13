@@ -21,7 +21,7 @@ class Image extends JsonResource
             'caption' => $this->caption,
             'comments_count' => $this->comments()->count(),
             'date' => Helper::getDates($this->created_at),
-            'avatar' => ImageHelper::getImage('testimonies', $this->resource, config('faithgen-sdk.ministries-server'))
+            'avatar' => ImageHelper::getImage('testimonies', $this->resource, config('faithgen-sdk.ministries-server')),
         ];
     }
 }

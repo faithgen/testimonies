@@ -18,10 +18,10 @@ class Testimony extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-       //     'comments_count' => $this->comments()->count(),
-            'approved' => (bool)$this->approved,
+            //     'comments_count' => $this->comments()->count(),
+            'approved' => (bool) $this->approved,
             'user' => new User($this->user),
-            'date' => Helper::getDates($this->created_at)
+            'date' => Helper::getDates($this->created_at),
         ];
     }
 }

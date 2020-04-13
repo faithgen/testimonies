@@ -2,12 +2,12 @@
 
 namespace Faithgen\Testimonies\Jobs;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Faithgen\Testimonies\Models\Testimony;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Intervention\Image\ImageManager;
 
 final class UploadImages implements ShouldQueue
@@ -20,7 +20,7 @@ final class UploadImages implements ShouldQueue
     protected $testimony;
 
     /**
-     * List of images to be saved
+     * List of images to be saved.
      */
     protected array $images;
 
@@ -45,17 +45,16 @@ final class UploadImages implements ShouldQueue
     public function handle(ImageManager $imageManager)
     {
         foreach ($this->images as $imageData) {
-            $fileName = str_shuffle($this->testimony->id . time() . time()) . '.png';
-            $ogSave = storage_path('app/public/testimonies/original/') . $fileName;
+            $fileName = str_shuffle($this->testimony->id.time().time()).'.png';
+            $ogSave = storage_path('app/public/testimonies/original/').$fileName;
             try {
                 $imageManager->make($imageData)->save($ogSave);
                 $this->testimony->images()->create([
                     'imageable_id' => $this->testimony->id,
-                    'name' => $fileName
+                    'name' => $fileName,
                 ]);
             } catch (\Exception $e) {
             }
-
         }
     }
 }

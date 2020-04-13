@@ -14,28 +14,28 @@ class CreateRequest extends FormRequest
     ];
 
     /**
-     * Gets the rules for a ministry with a premium subscription
+     * Gets the rules for a ministry with a premium subscription.
      *
      * @return array an set of premium attributes
      */
     private function getPremiumRules(): array
     {
         return array_merge($this->primaryRules, [
-            'images' => 'array|max:' . Testimonies::$premiumImageCount,
-            'images.*' => 'base64image'
+            'images' => 'array|max:'.Testimonies::$premiumImageCount,
+            'images.*' => 'base64image',
         ]);
     }
 
     /**
-     * Gets the rules for a ministry with a premuim+ subscription
+     * Gets the rules for a ministry with a premuim+ subscription.
      *
      * @return array
      */
     private function getPremiumPlusRules(): array
     {
         return array_merge($this->getPremiumRules(), [
-            'images' => 'array|max:' . Testimonies::$premiumPlusImageCount,
-            'resource' => 'url'
+            'images' => 'array|max:'.Testimonies::$premiumPlusImageCount,
+            'resource' => 'url',
         ]);
     }
 
@@ -47,7 +47,10 @@ class CreateRequest extends FormRequest
     public function authorize()
     {
         $user = auth('web')->user();
-        if ($user && $user->active) return true;
+        if ($user && $user->active) {
+            return true;
+        }
+
         return false;
     }
 
@@ -59,10 +62,13 @@ class CreateRequest extends FormRequest
     public function rules()
     {
         $subscriptionLevel = auth()->user()->account->level;
-        if ($subscriptionLevel === 'Free')
+        if ($subscriptionLevel === 'Free') {
             return  $this->primaryRules;
-        if ($subscriptionLevel === 'Premium')
+        }
+        if ($subscriptionLevel === 'Premium') {
             return $this->getPremiumRules();
+        }
+
         return $this->getPremiumPlusRules();
     }
 
@@ -72,15 +78,16 @@ class CreateRequest extends FormRequest
     }
 
     /**
-     * Converts image string array to usable string in the validation
+     * Converts image string array to usable string in the validation.
      *
      * @return void
      */
     public function prepareForValidation()
     {
-        if (is_string($this->images))
+        if (is_string($this->images)) {
             $this->merge([
-                'images' => json_decode($this->images, true)
+                'images' => json_decode($this->images, true),
             ]);
+        }
     }
 }
