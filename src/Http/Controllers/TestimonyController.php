@@ -2,47 +2,46 @@
 
 namespace Faithgen\Testimonies\Http\Controllers;
 
-use Illuminate\Http\Request;
-use FaithGen\SDK\Models\User;
-use Illuminate\Routing\Controller;
-use InnoFlash\LaraStart\Helper;
 use FaithGen\SDK\Helpers\CommentHelper;
-use Faithgen\Testimonies\Jobs\S3Upload;
-use Faithgen\Testimonies\Models\Testimony;
-use Faithgen\Testimonies\Jobs\UploadImages;
-use Faithgen\Testimonies\Jobs\ProcessImages;
-use InnoFlash\LaraStart\Traits\APIResponses;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use InnoFlash\LaraStart\Http\Requests\IndexRequest;
-use Faithgen\Testimonies\Http\Requests\CreateRequest;
-use Faithgen\Testimonies\Http\Requests\UpdateRequest;
-use Faithgen\Testimonies\Services\TestimoniesService;
-use Faithgen\Testimonies\Http\Requests\CommentRequest;
-use Illuminate\Foundation\Validation\ValidatesRequests;
+use FaithGen\SDK\Models\User;
 use Faithgen\Testimonies\Http\Requests\AddImagesRequest;
-use Faithgen\Testimonies\Http\Resources\TestimonyDetails;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Faithgen\Testimonies\Http\Requests\CommentRequest;
+use Faithgen\Testimonies\Http\Requests\CreateRequest;
 use Faithgen\Testimonies\Http\Requests\DeleteImageRequest;
 use Faithgen\Testimonies\Http\Requests\ToggleApprovalRequest;
+use Faithgen\Testimonies\Http\Requests\UpdateRequest;
 use Faithgen\Testimonies\Http\Resources\Testimony as TestimonyResource;
-use Intervention\Image\ImageManager;
+use Faithgen\Testimonies\Http\Resources\TestimonyDetails;
+use Faithgen\Testimonies\Jobs\ProcessImages;
+use Faithgen\Testimonies\Jobs\S3Upload;
+use Faithgen\Testimonies\Jobs\UploadImages;
+use Faithgen\Testimonies\Models\Testimony;
+use Faithgen\Testimonies\Services\TestimoniesService;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use InnoFlash\LaraStart\Helper;
+use InnoFlash\LaraStart\Http\Requests\IndexRequest;
+use InnoFlash\LaraStart\Traits\APIResponses;
 
 /**
- * Controlls \testimonies
+ * Controlls \testimonies.
  */
 final class TestimonyController extends Controller
 {
     use ValidatesRequests, AuthorizesRequests, DispatchesJobs, APIResponses;
 
     /**
-     * Injects the testimonies service class
+     * Injects the testimonies service class.
      *
      * @var TestimoniesService
      */
     private TestimoniesService $testimoniesService;
 
     /**
-     * Injects the service class
+     * Injects the service class.
      *
      * @param TestimoniesService $testimoniesService
      */
@@ -52,7 +51,7 @@ final class TestimonyController extends Controller
     }
 
     /**
-     * Creates a testimony for the given user
+     * Creates a testimony for the given user.
      *
      * @param CreateRequest $request
      * @return void
@@ -61,11 +60,12 @@ final class TestimonyController extends Controller
     {
         $testifier = auth('web')->user();
         $params = array_merge($request->validated(), [
-            'ministry_id' => auth()->user()->id
+            'ministry_id' => auth()->user()->id,
         ]);
         unset($params['images']);
         try {
             $testifier->testimonies()->create($params);
+
             return $this->successResponse('Testimony was posted successfully, waiting for admin to approve!');
         } catch (\Exception $exc) {
             return abort(500, $exc->getMessage());
@@ -73,7 +73,7 @@ final class TestimonyController extends Controller
     }
 
     /**
-     * Fetches the testimonies
+     * Fetches the testimonies.
      *
      * @param IndexRequest $request
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
@@ -85,8 +85,8 @@ final class TestimonyController extends Controller
             ->testimonies()
             ->latest()
             ->where(function ($testimony) use ($request) {
-                return $testimony->search(['title', 'created_at',], $request->filter_text)
-                    ->orWhereHas('user', fn($user) => $user->search('name', $request->filter_text));
+                return $testimony->search(['title', 'created_at'], $request->filter_text)
+                    ->orWhereHas('user', fn ($user) => $user->search('name', $request->filter_text));
             })
             ->with(['user.image', 'images'])
             ->exclude(['testimony', 'resource'])
@@ -99,7 +99,7 @@ final class TestimonyController extends Controller
     }
 
     /**
-     * Retrieves the testimony details
+     * Retrieves the testimony details.
      *
      * Shows only to the owner ministry
      *
@@ -111,11 +111,12 @@ final class TestimonyController extends Controller
     {
         $this->authorize('view', $testimony);
         TestimonyDetails::withoutWrapping();
+
         return new TestimonyDetails($testimony);
     }
 
     /**
-     * Deletes the testimony
+     * Deletes the testimony.
      *
      * @param Testimony $testimony
      * @return void
@@ -126,6 +127,7 @@ final class TestimonyController extends Controller
         $this->authorize('delete', $testimony);
         try {
             $testimony->delete();
+
             return $this->successResponse('Testimony deleted!');
         } catch (\Exception $e) {
             return abort(500, $e->getMessage());
@@ -133,7 +135,7 @@ final class TestimonyController extends Controller
     }
 
     /**
-     * Approves and disapprove a testimony
+     * Approves and disapprove a testimony.
      *
      * @param ToggleApprovalRequest $request
      * @return void
@@ -144,7 +146,7 @@ final class TestimonyController extends Controller
     }
 
     /**
-     * Fetches testimonies for a given user id who belongs to the authenticated ministry
+     * Fetches testimonies for a given user id who belongs to the authenticated ministry.
      *
      * @param Request $request You may include a limit in the request
      * @param User $user
@@ -165,13 +167,15 @@ final class TestimonyController extends Controller
                 ->paginate(Helper::getLimit($request));
 
             TestimonyResource::wrap('testimonies');
+
             return TestimonyResource::collection($testimonies);
         }
+
         return abort(403, 'You are not allowed to view testimonies from this user');
     }
 
     /**
-     * Updates the user,s testimony here
+     * Updates the user,s testimony here.
      *
      * @param UpdateRequest $request
      * @return void
@@ -182,7 +186,7 @@ final class TestimonyController extends Controller
     }
 
     /**
-     * Deletes an image from a testimony
+     * Deletes an image from a testimony.
      *
      * @param DeleteImageRequest $request
      * @return void
@@ -191,9 +195,9 @@ final class TestimonyController extends Controller
     {
         $image = $this->testimoniesService->getTestimony()->images()->findOrFail($request->image_id);
         try {
-            unlink(storage_path('app/public/testimonies/100-100/' . $image->name));
-            unlink(storage_path('app/public/testimonies/50-50/' . $image->name));
-            unlink(storage_path('app/public/testimonies/original/' . $image->name));
+            unlink(storage_path('app/public/testimonies/100-100/'.$image->name));
+            unlink(storage_path('app/public/testimonies/50-50/'.$image->name));
+            unlink(storage_path('app/public/testimonies/original/'.$image->name));
 
             return $this->successResponse('Image deleted!');
         } catch (\Exception $e) {
@@ -204,7 +208,7 @@ final class TestimonyController extends Controller
     }
 
     /**
-     * Uploads images attaching them to a given testimony
+     * Uploads images attaching them to a given testimony.
      *
      * @param AddImagesRequest $request
      * @return void
@@ -213,16 +217,17 @@ final class TestimonyController extends Controller
     {
         UploadImages::withChain([
             new ProcessImages($this->testimoniesService->getTestimony()),
-            new S3Upload($this->testimoniesService->getTestimony())
+            new S3Upload($this->testimoniesService->getTestimony()),
         ])->dispatch(
             $this->testimoniesService->getTestimony(),
             $request->images
         );
+
         return $this->successResponse('Images uploaded, processing them now');
     }
 
     /**
-     * Fetches comments for the given testimony
+     * Fetches comments for the given testimony.
      *
      * @param Request $request
      * @param Testimony $testimony
@@ -237,7 +242,7 @@ final class TestimonyController extends Controller
     }
 
     /**
-     * This sends a comment to the given testimony
+     * This sends a comment to the given testimony.
      *
      * @param CommentRequest $request
      * @return \Illuminate\Http\JsonResponse

@@ -3,8 +3,8 @@
 namespace Faithgen\Testimonies\Http\Requests;
 
 use FaithGen\SDK\Helpers\Helper;
-use Illuminate\Foundation\Http\FormRequest;
 use Faithgen\Testimonies\Services\TestimoniesService;
+use Illuminate\Foundation\Http\FormRequest;
 
 class ToggleApprovalRequest extends FormRequest
 {
@@ -27,7 +27,7 @@ class ToggleApprovalRequest extends FormRequest
     {
         return [
             'testimony_id' => Helper::$idValidation,
-            'approved' => 'required|boolean'
+            'approved' => 'required|boolean',
         ];
     }
 }

@@ -18,23 +18,24 @@ final class TestimoniesServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->registerRoutes(__DIR__ . '/../routes/testimonies.php', __DIR__ . '/../routes/source.php');
+        $this->registerRoutes(__DIR__.'/../routes/testimonies.php', __DIR__.'/../routes/source.php');
 
         $this->setUpSourceFiles(function () {
-            $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+            $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
             $this->publishes([
-                __DIR__ . '/../database/migrations/' => database_path('migrations')
+                __DIR__.'/../database/migrations/' => database_path('migrations'),
             ], 'faithgen-testimonies-migrations');
         });
 
-        if (!config('faithgen-sdk.source'))
+        if (! config('faithgen-sdk.source')) {
             $this->publishes([
-                __DIR__ . '/../storage/' => storage_path('app/public/testimonies')
+                __DIR__.'/../storage/' => storage_path('app/public/testimonies'),
             ], 'faithgen-testimonies-storage');
+        }
 
         $this->publishes([
-            __DIR__ . '/../config/config.php' => config_path('faithgen-testimonies.php'),
+            __DIR__.'/../config/config.php' => config_path('faithgen-testimonies.php'),
         ], 'faithgen-testimonies-config');
 
         Testimony::observe(TestimonyObserver::class);
@@ -46,7 +47,7 @@ final class TestimoniesServiceProvider extends ServiceProvider
     public function register(): void
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'faithgen-testimonies');
+        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'faithgen-testimonies');
 
         // Register the main class to use with the facade
         $this->app->singleton('testimonies', function () {

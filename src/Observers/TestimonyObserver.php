@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 final class TestimonyObserver
 {
     use FileTraits;
+
     /**
      * Handle the testimony "created" event.
      *
@@ -20,11 +21,12 @@ final class TestimonyObserver
      */
     public function created(Testimony $testimony)
     {
-        if (auth()->user()->account->level !== 'Free')
+        if (auth()->user()->account->level !== 'Free') {
             UploadImages::withChain([
                 new ProcessImages($testimony),
-                new S3Upload()
+                new S3Upload(),
             ])->dispatch($testimony, request('images'));
+        }
     }
 
     /**

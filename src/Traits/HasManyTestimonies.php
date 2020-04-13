@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 trait HasManyTestimonies
 {
     /**
-     * Links a calling object to many testimonies
+     * Links a calling object to many testimonies.
      *
      * @return Relation
      */

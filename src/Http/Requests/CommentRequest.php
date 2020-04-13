@@ -4,9 +4,9 @@ namespace Faithgen\Testimonies\Http\Requests;
 
 use FaithGen\SDK\Helpers\Helper;
 use FaithGen\SDK\Models\Ministry;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Auth\Access\AuthorizationException;
 use Faithgen\Testimonies\Services\TestimoniesService;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Foundation\Http\FormRequest;
 
 class CommentRequest extends FormRequest
 {
@@ -17,7 +17,10 @@ class CommentRequest extends FormRequest
      */
     public function authorize(TestimoniesService $testimoniesService)
     {
-        if (auth()->user() instanceof Ministry) return $this->user()->can('view', $testimoniesService->getTestimony());
+        if (auth()->user() instanceof Ministry) {
+            return $this->user()->can('view', $testimoniesService->getTestimony());
+        }
+
         return true;
     }
 
@@ -30,11 +33,11 @@ class CommentRequest extends FormRequest
     {
         return [
             'testimony_id' => Helper::$idValidation,
-            'comment' => 'required'
+            'comment' => 'required',
         ];
     }
 
-    function failedAuthorization()
+    public function failedAuthorization()
     {
         throw new AuthorizationException('You do not have access to this testimony');
     }

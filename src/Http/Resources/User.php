@@ -16,7 +16,7 @@ class User extends JsonResource
     public function toArray($request)
     {
         return array_merge(parent::toArray($request), [
-            'image' => ImageHelper::getImage('users', $this->image, config('faithgen-sdk.users-server'))
+            'image' => ImageHelper::getImage('users', $this->image, config('faithgen-sdk.users-server')),
         ]);
     }
 }

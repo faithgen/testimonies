@@ -36,12 +36,17 @@ final class Testimony extends UuidModel
     {
         $authedUser = auth('web')->user();
 
-        if ($user === null || $authedUser === null) $isOwner = false;
+        if ($user === null || $authedUser === null) {
+            $isOwner = false;
+        }
 
-        if ($authedUser && $authedUser->id === $user->id) $isOwner = true;
+        if ($authedUser && $authedUser->id === $user->id) {
+            $isOwner = true;
+        }
 
-        if (config('faithgen-sdk.source') || $isOwner)
+        if (config('faithgen-sdk.source') || $isOwner) {
             return $query;
+        }
 
         return $query->whereApproved(true);
     }

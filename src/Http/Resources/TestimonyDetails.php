@@ -2,8 +2,8 @@
 
 namespace Faithgen\Testimonies\Http\Resources;
 
-use InnoFlash\LaraStart\Helper;
 use Illuminate\Http\Resources\Json\JsonResource;
+use InnoFlash\LaraStart\Helper;
 
 class TestimonyDetails extends JsonResource
 {
@@ -21,10 +21,10 @@ class TestimonyDetails extends JsonResource
             'comments_count' => $this->comments()->count(),
             'resource' => $this->resource->resource,
             'testimony' => $this->testimony,
-            'approved' => (bool)$this->approved,
+            'approved' => (bool) $this->approved,
             'user' => $this->user,
             'date' => Helper::getDates($this->created_at),
-            'images' => Image::collection($this->images)
+            'images' => Image::collection($this->images),
         ];
     }
 }

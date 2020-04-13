@@ -52,9 +52,11 @@ class TestimonyPolicy
      */
     public function update(Ministry $ministry, Testimony $testimony)
     {
-        if (in_array(request()->route()->getName(), $this->adminRouteNames))
+        if (in_array(request()->route()->getName(), $this->adminRouteNames)) {
             return $ministry->id === $testimony->ministry_id;
+        }
         $user = auth('web')->user();
+
         return $user->id === $testimony->user_id
             && $user->active
             && $ministry->id === $testimony->ministry_id;
