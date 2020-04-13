@@ -88,7 +88,7 @@ final class TestimonyController extends Controller
             ->latest()
             ->where(function ($testimony) use ($request) {
                 return $testimony->search(['title', 'created_at'], $request->filter_text)
-                    ->orWhereHas('user', fn($user) => $user->search('name', $request->filter_text));
+                    ->orWhereHas('user', fn ($user) => $user->search('name', $request->filter_text));
             })
             ->with(['user.image', 'images'])
             ->exclude(['testimony', 'resource'])
