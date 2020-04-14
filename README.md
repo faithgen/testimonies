@@ -1,4 +1,4 @@
-# Very short description of the package
+# Faithgen Testimonies
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/faithgen/testimonies.svg?style=flat-square)](https://packagist.org/packages/faithgen/testimonies)
 [![Build Status](https://img.shields.io/travis/faithgen/testimonies/master.svg?style=flat-square)](https://travis-ci.org/faithgen/testimonies)
