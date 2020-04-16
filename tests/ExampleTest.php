@@ -3,7 +3,7 @@
 namespace Faithgen\Testimonies\Tests;
 
 use Faithgen\Testimonies\TestimoniesServiceProvider;
-use Orchestra\Testbench\TestCase;
+use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
