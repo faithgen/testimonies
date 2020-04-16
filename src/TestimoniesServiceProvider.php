@@ -23,6 +23,8 @@ final class TestimoniesServiceProvider extends ServiceProvider
         $this->setUpSourceFiles(function () {
             $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
+            $this->loadFactoriesFrom(__DIR__.'/../database/factories');
+
             $this->publishes([
                 __DIR__.'/../database/migrations/' => database_path('migrations'),
             ], 'faithgen-testimonies-migrations');
