@@ -29,7 +29,8 @@ final class UploadImages implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @return void
+     * @param  Testimony  $testimony
+     * @param  array  $images
      */
     public function __construct(Testimony $testimony, array $images)
     {
@@ -39,6 +40,8 @@ final class UploadImages implements ShouldQueue
 
     /**
      * Execute the job.
+     *
+     * @param  ImageManager  $imageManager
      *
      * @return void
      */

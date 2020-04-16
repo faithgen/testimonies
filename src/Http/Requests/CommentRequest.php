@@ -33,7 +33,7 @@ class CommentRequest extends FormRequest
     {
         return [
             'testimony_id' => Helper::$idValidation,
-            'comment' => 'required',
+            'comment' => 'required|string',
         ];
     }
 
