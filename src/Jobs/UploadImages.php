@@ -12,19 +12,22 @@ use Intervention\Image\ImageManager;
 
 final class UploadImages implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable,
+        InteractsWithQueue,
+        Queueable,
+        SerializesModels;
 
     /**
      * @var testimony
      */
-    protected $testimony;
+    protected Testimony $testimony;
 
     /**
      * List of images to be saved.
      */
     protected array $images;
 
-    public $deleteWhenMissingModels = true;
+    public bool $deleteWhenMissingModels = true;
 
     /**
      * Create a new job instance.

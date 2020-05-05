@@ -2,24 +2,37 @@
 
 namespace Faithgen\Testimonies\Jobs;
 
+use FaithGen\SDK\Traits\SavesToAmazonS3;
+use Faithgen\Testimonies\Models\Testimony;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 final class S3Upload implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable,
+        InteractsWithQueue,
+        Queueable,
+        SerializesModels,
+        SavesToAmazonS3;
+    /**
+     * @var Testimony
+     */
+    private Testimony $testimony;
+
+    public bool $deleteWhenMissingModels = true;
 
     /**
      * Create a new job instance.
      *
-     * @return void
+     * @param Testimony $testimony
      */
-    public function __construct()
+    public function __construct(Testimony $testimony)
     {
-        //
+        $this->testimony = $testimony;
     }
 
     /**
@@ -29,6 +42,10 @@ final class S3Upload implements ShouldQueue
      */
     public function handle()
     {
-        //
+        try {
+            $this->saveFiles($this->testimony);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
     }
 }

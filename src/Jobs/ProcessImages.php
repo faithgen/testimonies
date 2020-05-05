@@ -12,21 +12,24 @@ use Intervention\Image\ImageManager;
 
 final class ProcessImages implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable,
+        InteractsWithQueue,
+        Queueable,
+        SerializesModels;
 
-    public $deleteWhenMissingModels = true;
+    public bool $deleteWhenMissingModels = true;
 
     /**
-     * The tesimony to process images for.
+     * The testimony to process images for.
      *
      * @var Testimony
      */
-    protected $testimony;
+    protected Testimony $testimony;
 
     /**
      * Create a new job instance.
      *
-     * @return void
+     * @param Testimony $testimony
      */
     public function __construct(Testimony $testimony)
     {
@@ -37,6 +40,7 @@ final class ProcessImages implements ShouldQueue
      * Execute the job.
      *
      * @param ImageManager $imageManager
+     *
      * @return void
      */
     public function handle(ImageManager $imageManager)
