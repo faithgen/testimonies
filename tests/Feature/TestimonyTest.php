@@ -2,13 +2,10 @@
 
 namespace Faithgen\Testimonies\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class TestimonyTest extends TestCase
 {
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -37,11 +34,11 @@ class TestimonyTest extends TestCase
         $this->assertFalse($composerData->name == 'faithgen/testimoniesd');
         $this->assertTrue($composerData->name == 'faithgen/testimonies');
 
-        $this->assertArrayHasKey("homepage", (array) $composerData);
+        $this->assertArrayHasKey('homepage', (array) $composerData);
 
         $this->assertEquals($composerData->homepage, 'https://github.com/faithgen/testimonies');
 
-        $this->assertArrayNotHasKey("damnit", (array) $composerData);
+        $this->assertArrayNotHasKey('damnit', (array) $composerData);
 
         $providers = $composerData->extra->laravel->providers;
 

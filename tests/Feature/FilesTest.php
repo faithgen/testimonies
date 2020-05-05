@@ -2,8 +2,6 @@
 
 namespace Faithgen\Testimonies\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class FilesTest extends TestCase
