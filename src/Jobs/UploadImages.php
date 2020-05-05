@@ -2,6 +2,7 @@
 
 namespace Faithgen\Testimonies\Jobs;
 
+use FaithGen\SDK\Traits\UploadsImages;
 use Faithgen\Testimonies\Models\Testimony;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,7 +16,8 @@ final class UploadImages implements ShouldQueue
     use Dispatchable,
         InteractsWithQueue,
         Queueable,
-        SerializesModels;
+        SerializesModels,
+        UploadsImages;
 
     /**
      * @var testimony
@@ -32,8 +34,8 @@ final class UploadImages implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @param  Testimony  $testimony
-     * @param  array  $images
+     * @param Testimony $testimony
+     * @param array $images
      */
     public function __construct(Testimony $testimony, array $images)
     {
@@ -44,23 +46,12 @@ final class UploadImages implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @param  ImageManager  $imageManager
+     * @param ImageManager $imageManager
      *
      * @return void
      */
     public function handle(ImageManager $imageManager)
     {
-        foreach ($this->images as $imageData) {
-            $fileName = str_shuffle($this->testimony->id.time().time()).'.png';
-            $ogSave = storage_path('app/public/testimonies/original/').$fileName;
-            try {
-                $imageManager->make($imageData)->save($ogSave);
-                $this->testimony->images()->create([
-                    'imageable_id' => $this->testimony->id,
-                    'name' => $fileName,
-                ]);
-            } catch (\Exception $e) {
-            }
-        }
+        $this->uploadImages($this->testimony, $this->images, $imageManager);
     }
 }
