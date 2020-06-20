@@ -2,14 +2,16 @@
 
 namespace Faithgen\Testimonies\Http\Requests;
 
-use FaithGen\SDK\Helpers\Helper;
 use Faithgen\Testimonies\Services\TestimoniesService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DeleteImageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
+     *
+     * @param \Faithgen\Testimonies\Services\TestimoniesService $testimoniesService
      *
      * @return bool
      */
@@ -25,9 +27,11 @@ class DeleteImageRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'testimony_id' => Helper::$idValidation,
-            'image_id' => Helper::$idValidation,
-        ];
+        return [];
+    }
+
+    public function failedAuthorization()
+    {
+        throw new AuthorizationException('You can not delete images from this testimony.');
     }
 }

@@ -4,6 +4,7 @@ namespace Faithgen\Testimonies\Http\Controllers;
 
 use FaithGen\SDK\Helpers\CommentHelper;
 use FaithGen\SDK\Http\Requests\CommentRequest;
+use FaithGen\SDK\Models\Image;
 use FaithGen\SDK\Models\User;
 use Faithgen\Testimonies\Http\Requests\AddImagesRequest;
 use Faithgen\Testimonies\Http\Requests\CreateRequest;
@@ -43,7 +44,7 @@ final class TestimonyController extends Controller
     /**
      * Injects the service class.
      *
-     * @param  TestimoniesService  $testimoniesService
+     * @param TestimoniesService $testimoniesService
      */
     public function __construct(TestimoniesService $testimoniesService)
     {
@@ -53,7 +54,7 @@ final class TestimonyController extends Controller
     /**
      * Creates a testimony for the given user.
      *
-     * @param  CreateRequest  $request
+     * @param CreateRequest $request
      *
      * @return void
      */
@@ -76,7 +77,7 @@ final class TestimonyController extends Controller
     /**
      * Fetches the testimonies.
      *
-     * @param  IndexRequest  $request
+     * @param IndexRequest $request
      *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
@@ -88,7 +89,7 @@ final class TestimonyController extends Controller
             ->latest()
             ->where(function ($testimony) use ($request) {
                 return $testimony->search(['title', 'created_at'], $request->filter_text)
-                    ->orWhereHas('user', fn ($user) => $user->search('name', $request->filter_text));
+                    ->orWhereHas('user', fn($user) => $user->search('name', $request->filter_text));
             })
             ->with(['user.image', 'images'])
             ->exclude(['testimony', 'resource'])
@@ -105,10 +106,10 @@ final class TestimonyController extends Controller
      *
      * Shows only to the owner ministry
      *
-     * @param  Testimony  $testimony
+     * @param Testimony $testimony
      *
-     * @throws \Illuminate\Auth\Access\AuthorizationException
      * @return TestimonyDetails
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function show(Testimony $testimony)
     {
@@ -121,10 +122,10 @@ final class TestimonyController extends Controller
     /**
      * Deletes the testimony.
      *
-     * @param  Testimony  $testimony
+     * @param Testimony $testimony
      *
-     * @throws \Illuminate\Auth\Access\AuthorizationException
      * @return void
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function destroy(Testimony $testimony)
     {
@@ -141,7 +142,7 @@ final class TestimonyController extends Controller
     /**
      * Approves and disapprove a testimony.
      *
-     * @param  ToggleApprovalRequest  $request
+     * @param ToggleApprovalRequest $request
      *
      * @return void
      */
@@ -153,8 +154,8 @@ final class TestimonyController extends Controller
     /**
      * Fetches testimonies for a given user id who belongs to the authenticated ministry.
      *
-     * @param  Request  $request  You may include a limit in the request
-     * @param  User  $user
+     * @param Request $request You may include a limit in the request
+     * @param User $user
      *
      * @return void
      */
@@ -183,7 +184,7 @@ final class TestimonyController extends Controller
     /**
      * Updates the user,s testimony here.
      *
-     * @param  UpdateRequest  $request
+     * @param UpdateRequest $request
      *
      * @return void
      */
@@ -195,13 +196,15 @@ final class TestimonyController extends Controller
     /**
      * Deletes an image from a testimony.
      *
-     * @param  DeleteImageRequest  $request
+     * @param DeleteImageRequest $request
+     *
+     * @param \Faithgen\Testimonies\Http\Controllers\Image $image
      *
      * @return void
      */
-    public function destroyImage(DeleteImageRequest $request)
+    public function destroyImage(DeleteImageRequest $request, Image $image)
     {
-        $image = $this->testimoniesService->getTestimony()->images()->findOrFail($request->image_id);
+        $image = $this->testimoniesService->getTestimony()->images()->findOrFail($image->id);
         try {
             unlink(storage_path('app/public/testimonies/100-100/'.$image->name));
             unlink(storage_path('app/public/testimonies/50-50/'.$image->name));
@@ -218,7 +221,7 @@ final class TestimonyController extends Controller
     /**
      * Uploads images attaching them to a given testimony.
      *
-     * @param  AddImagesRequest  $request
+     * @param AddImagesRequest $request
      *
      * @return void
      */
@@ -238,11 +241,11 @@ final class TestimonyController extends Controller
     /**
      * Fetches comments for the given testimony.
      *
-     * @param  Request  $request
-     * @param  Testimony  $testimony
+     * @param Request $request
+     * @param Testimony $testimony
      *
-     * @throws \Illuminate\Auth\Access\AuthorizationException
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function comments(Request $request, Testimony $testimony)
     {
@@ -254,7 +257,7 @@ final class TestimonyController extends Controller
     /**
      * This sends a comment to the given testimony.
      *
-     * @param  CommentRequest  $request
+     * @param CommentRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
      */

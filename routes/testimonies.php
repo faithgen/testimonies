@@ -11,7 +11,7 @@ Route::prefix('testimonies/')
         Route::get('user/{user}', [TestimonyController::class, 'userTestimonies']);
         Route::get('comments/{testimony}', [TestimonyController::class, 'comments']);
         Route::post('comment/{testimony}', [TestimonyController::class, 'comment']);
-        Route::post('delete-image', [TestimonyController::class, 'destroyImage'])->name('delete-image');
+        Route::delete('{testimony}/{image}', [TestimonyController::class, 'destroyImage'])->name('delete-image');
         Route::post('', [TestimonyController::class, 'create']);
         Route::post('update', [TestimonyController::class, 'update']);
         Route::post('add-images', [TestimonyController::class, 'addImages']);
