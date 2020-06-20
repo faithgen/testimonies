@@ -31,7 +31,7 @@ final class TestimoniesService extends CRUDServices
      * to the create or update methods
      * Its mainly the fields that you do not have in the testimonys table.
      */
-    public function getUnsetFields()
+    public function getUnsetFields(): array
     {
         return ['testimony_id'];
     }
