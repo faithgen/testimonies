@@ -14,6 +14,6 @@ Route::prefix('testimonies/')
         Route::delete('{testimony}/{image}', [TestimonyController::class, 'destroyImage'])->name('delete-image');
         Route::post('', [TestimonyController::class, 'create']);
         Route::post('update/{testimony}', [TestimonyController::class, 'update']);
-        Route::post('add-images', [TestimonyController::class, 'addImages']);
+        Route::post('{testimony}/add-images', [TestimonyController::class, 'addImages']);
         Route::delete('{testimony}', [TestimonyController::class, 'destroy']);
     });

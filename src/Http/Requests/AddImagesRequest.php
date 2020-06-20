@@ -2,7 +2,6 @@
 
 namespace Faithgen\Testimonies\Http\Requests;
 
-use FaithGen\SDK\Helpers\Helper;
 use Faithgen\Testimonies\Services\TestimoniesService;
 use Faithgen\Testimonies\Testimonies;
 use Illuminate\Foundation\Http\FormRequest;
@@ -13,6 +12,8 @@ class AddImagesRequest extends FormRequest
 
     /**
      * Determine if the user is authorized to make this request.
+     *
+     * @param \Faithgen\Testimonies\Services\TestimoniesService $testimoniesService
      *
      * @return bool
      */
@@ -32,8 +33,7 @@ class AddImagesRequest extends FormRequest
     public function rules()
     {
         return [
-            'testimony_id' => Helper::$idValidation,
-            'images' => 'required|array|max:'.$this->getRemainingImages(),
+            'images'   => 'required|array|max:'.$this->getRemainingImages(),
             'images.*' => 'base64image',
         ];
     }
