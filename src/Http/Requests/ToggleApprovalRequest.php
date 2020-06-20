@@ -2,14 +2,16 @@
 
 namespace Faithgen\Testimonies\Http\Requests;
 
-use FaithGen\SDK\Helpers\Helper;
 use Faithgen\Testimonies\Services\TestimoniesService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ToggleApprovalRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
+     *
+     * @param \Faithgen\Testimonies\Services\TestimoniesService $testimoniesService
      *
      * @return bool
      */
@@ -26,8 +28,12 @@ class ToggleApprovalRequest extends FormRequest
     public function rules()
     {
         return [
-            'testimony_id' => Helper::$idValidation,
             'approved' => 'required|boolean',
         ];
+    }
+
+    public function failedAuthorization()
+    {
+        throw new AuthorizationException('You are not permitted to transact on this testimony.');
     }
 }

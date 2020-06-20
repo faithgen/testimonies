@@ -7,5 +7,5 @@ Route::prefix('testimonies/')
     ->name('testimonies.')
     ->middleware('source.site')
     ->group(function () {
-        Route::put('toggle-approval', [TestimonyController::class, 'toggleApproval'])->name('toggle-approval');
+        Route::put('{testimony}/toggle-approval', [TestimonyController::class, 'toggleApproval'])->name('toggle-approval');
     });
