@@ -13,7 +13,7 @@ Route::prefix('testimonies/')
         Route::post('comment/{testimony}', [TestimonyController::class, 'comment']);
         Route::delete('{testimony}/{image}', [TestimonyController::class, 'destroyImage'])->name('delete-image');
         Route::post('', [TestimonyController::class, 'create']);
-        Route::post('update', [TestimonyController::class, 'update']);
+        Route::post('update/{testimony}', [TestimonyController::class, 'update']);
         Route::post('add-images', [TestimonyController::class, 'addImages']);
         Route::delete('{testimony}', [TestimonyController::class, 'destroy']);
     });

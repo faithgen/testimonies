@@ -9,9 +9,8 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateRequest extends FormRequest
 {
     private $primaryRules = [
-        'title' => 'required|string',
+        'title'     => 'required|string',
         'testimony' => 'required|string',
-        'testimony_id' => 'required|string',
     ];
 
     /**
@@ -28,6 +27,8 @@ class UpdateRequest extends FormRequest
 
     /**
      * Determine if the user is authorized to make this request.
+     *
+     * @param \Faithgen\Testimonies\Services\TestimoniesService $testimoniesService
      *
      * @return bool
      */
