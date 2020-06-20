@@ -3,9 +3,9 @@
 namespace Faithgen\Testimonies\Http\Controllers;
 
 use FaithGen\SDK\Helpers\CommentHelper;
+use FaithGen\SDK\Http\Requests\CommentRequest;
 use FaithGen\SDK\Models\User;
 use Faithgen\Testimonies\Http\Requests\AddImagesRequest;
-use Faithgen\Testimonies\Http\Requests\CommentRequest;
 use Faithgen\Testimonies\Http\Requests\CreateRequest;
 use Faithgen\Testimonies\Http\Requests\DeleteImageRequest;
 use Faithgen\Testimonies\Http\Requests\ToggleApprovalRequest;
