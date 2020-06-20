@@ -7,19 +7,23 @@ use InnoFlash\LaraStart\Services\CRUDServices;
 
 final class TestimoniesService extends CRUDServices
 {
-    private $testimony;
+    protected Testimony $testimony;
 
-    public function __construct(Testimony $testimony)
+    public function __construct()
     {
-        if (request()->has('testimony_id')) {
-            $this->testimony = Testimony::findOrFail(request('testimony_id'));
-        } else {
-            $this->testimony = $testimony;
+        $this->testimony = app(Testimony::class);
+
+        $testimonyId = request()->route('testimony') ?? request('testimony_id');
+
+        if ($testimonyId) {
+            $this->testimony = $this->testimony->resolveRouteBinding($testimonyId);
         }
     }
 
     /**
-     * Retrives an instance of testimony.
+     * Retrieves an instance of testimony.
+     *
+     * @return \Faithgen\Testimonies\Models\Testimony
      */
     public function getTestimony(): Testimony
     {
@@ -28,21 +32,14 @@ final class TestimoniesService extends CRUDServices
 
     /**
      * Makes a list of fields that you do not want to be sent
-     * to the create or update methods
-     * Its mainly the fields that you do not have in the testimonys table.
+     * to the create or update methods.
+     * Its mainly the fields that you do not have in the messages table.
+     *
+     * @return array
      */
     public function getUnsetFields(): array
     {
         return ['testimony_id'];
-    }
-
-    /**
-     * This returns the model found in the constructor
-     * or an instance of the class if no testimony is found.
-     */
-    public function getModel()
-    {
-        return $this->getTestimony();
     }
 
     /**
@@ -51,8 +48,6 @@ final class TestimoniesService extends CRUDServices
      */
     public function getParentRelationship()
     {
-        return [
-            auth()->user()->testimonies(),
-        ];
+        return auth()->user()->testimonies();
     }
 }
